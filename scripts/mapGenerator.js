@@ -48,36 +48,3 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   //return [x,y];
   return x + ", " + y;
 }
-
-// function createShape(numSides, area) {
-//     var angle = 0;
-//     var x = 0;
-//     var y = 0;
-//     var points = [];
-//     var radius = 250; //Math.sqrt((2 * area) / (numSides * Math.sin((2 * Math.PI) / numSides)));
-//     console.log("radius: " + radius);
-//     var centerXPos = globals.boardWidth / 2;
-//     var centerYPos = globals.boardHeight / 2;
-//     var polygonStr = "";//centerXPos + ", " + centerYPos;
-//     //from center point, go a distance R and generate points at 2pi/n angle increments
-//     for(var index = 1; index <= numSides; index += 1) {
-//         console.log("Iteration: " + index);
-//         angle = (2 * Math.PI) / numSides * index;
-//         console.log("Angle: " + angle);
-//         x = Math.cos(angle) * radius;
-//         console.log("X: " + x);
-//         y = Math.sin(angle) * radius;
-//         console.log("Y: " + y);
-//          // x += 100;
-//          // y += 100;
-//         points.push(new Point(x, y));
-//     }
-
-//     for(index = 0; index < points.length; index += 1) {
-//         polygonStr += points[index].x + ", " + points[index].y + ", "; 
-//     }
-//     polygonStr = polygonStr.substr(0, polygonStr.lastIndexOf(",")).trim();
-
-//     console.log(polygonStr);
-//     globals.boardElement.polygon(polygonStr);
-// }
