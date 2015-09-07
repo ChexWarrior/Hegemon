@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
       minAmtPoints: 4,
       maxAmtPoints: 10
     };
-    createShape(250, 250, 35, 100, 300);
+    createShape(250, 250, 35, 20, 200);
 });
 
 function generateRandomNumber(min, max) {
@@ -34,13 +34,13 @@ function determineLengthFactor(min, max, prevLength) {
   var minDistance = prevLength - min,
       maxDistance = Math.abs(prevLength - max),
       halfDistance = (max - min) / 2;
-      if(minDistance > maxDistance) {
-        return [min, prevLength];
-      } else if(maxDistance > minDistance) {
-        return [prevLength, max];
-      } else {
-        return [min, max];
-      }
+  if(minDistance > maxDistance) {
+    return [prevLength - (prevLength * .20), prevLength];
+  } else if(maxDistance > minDistance) {
+    return [prevLength, prevLength + (prevLength * .20)];
+  } else {
+    return [min, max];
+  }
 } 
 
 function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxDistance) {
@@ -59,7 +59,7 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
       distance = determineLengthFactor(minDistance, maxDistance, prevLength);
       currMin = distance[0];
       currMax = distance[1];
-    } 
+    }
     length = generateRandomNumber(currMin, currMax);
     prevLength = length;
     //console.log("Length: " + length + " Angle: " + angle);
