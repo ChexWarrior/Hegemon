@@ -20,8 +20,8 @@ function generateRandomNumber(min, max) {
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180.0,
-      x = centerX + radius * Math.cos(angleInRadians),
-      y = centerY + radius * Math.sin(angleInRadians);
+  x = centerX + radius * Math.cos(angleInRadians),
+  y = centerY + radius * Math.sin(angleInRadians);
   //console.log("X: " + x + " Y: " + y);
   return x + ", " + y;
 }
