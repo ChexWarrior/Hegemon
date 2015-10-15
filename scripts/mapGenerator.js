@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
       maxAmtPoints: 10,
       marks: []
     };
+<<<<<<< HEAD
     createShape(250, 250, 20, 20, 200);
+=======
+    createShape(250, 250, 35, 100, 300);
+>>>>>>> parent of 1c3f554... Add percentage of prevLength as modifier
 });
 
 function generateRandomNumber(min, max) {
@@ -39,13 +43,13 @@ function determineLengthFactor(min, max, prevLength) {
   var minDistance = prevLength - min,
       maxDistance = Math.abs(prevLength - max),
       halfDistance = (max - min) / 2;
-  if(minDistance > maxDistance) {
-    return [prevLength - (prevLength * .20), prevLength];
-  } else if(maxDistance > minDistance) {
-    return [prevLength, prevLength + (prevLength * .20)];
-  } else {
-    return [min, max];
-  }
+      if(minDistance > maxDistance) {
+        return [min, prevLength];
+      } else if(maxDistance > minDistance) {
+        return [prevLength, max];
+      } else {
+        return [min, max];
+      }
 } 
 
 function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxDistance) {
@@ -63,6 +67,7 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
   //console.log("Angle Increment: " + angleIncrement);
   console.log("x: " + bCircleCenterX + " y:" + bCircleCenterY);
   for(index = 0; index < numSides; index += 1) {
+<<<<<<< HEAD
     a = generateRandomNumber(minDistance, maxDistance);
     b = generateRandomNumber(a, maxDistance);
     console.log(index + "-> a: " + a + " b: " + b);
@@ -70,6 +75,18 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
     // console.log("Length: " + length + " Angle: " + angle);
     // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + length);
     polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, a, b, angle) + ",";
+=======
+    if(prevLength) {
+      distance = determineLengthFactor(minDistance, maxDistance, prevLength);
+      currMin = distance[0];
+      currMax = distance[1];
+    } 
+    length = generateRandomNumber(currMin, currMax);
+    prevLength = length;
+    //console.log("Length: " + length + " Angle: " + angle);
+    console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + length);
+    polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, length, angle) + ",";
+>>>>>>> parent of 1c3f554... Add percentage of prevLength as modifier
     angle += angleIncrement;
     //angle += generateRandomNumber(angle, angle + angleIncrement);
   }
