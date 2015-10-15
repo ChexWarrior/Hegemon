@@ -12,19 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
       maxAmtPoints: 10,
       marks: []
     };
-<<<<<<< HEAD
-    createShape(250, 250, 20, 20, 200);
-=======
+    createShape(250, 250, 10, 100, 250);
 });
 
 function generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function polarToCartesian(centerX, centerY, a, b, angleInDegrees) {
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = angleInDegrees * Math.PI / 180.0,
-  x = centerX + a * Math.cos(angleInRadians),
-  y = centerY + b * Math.sin(angleInRadians);
+  x = centerX + radius * Math.cos(angleInRadians),
+  y = centerY + radius * Math.sin(angleInRadians);
   //console.log("X: " + x + " Y: " + y);
   globals.marks.push({
     x: x,
@@ -65,19 +63,15 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
   //console.log("Angle Increment: " + angleIncrement);
   console.log("x: " + bCircleCenterX + " y:" + bCircleCenterY);
   for(index = 0; index < numSides; index += 1) {
-<<<<<<< HEAD
-    a = generateRandomNumber(minDistance, maxDistance);
-    b = generateRandomNumber(a, maxDistance);
-    console.log(index + "-> a: " + a + " b: " + b);
-    
+    length = generateRandomNumber(minDistance, maxDistance);      
     // console.log("Length: " + length + " Angle: " + angle);
     // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + length);
-    polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, a, b, angle) + ",";
-    if(prevLength) {
-      distance = determineLengthFactor(minDistance, maxDistance, prevLength);
-      currMin = distance[0];
-      currMax = distance[1];
-    } 
+    polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, length, angle) + ",";
+    // if(prevLength) {
+    //   distance = determineLengthFactor(minDistance, maxDistance, prevLength);
+    //   currMin = distance[0];
+    //   currMax = distance[1];
+    // } 
     length = generateRandomNumber(currMin, currMax);
     prevLength = length;
     //console.log("Length: " + length + " Angle: " + angle);
