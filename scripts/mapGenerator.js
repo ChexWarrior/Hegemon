@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
 <<<<<<< HEAD
     createShape(250, 250, 20, 20, 200);
 =======
-    createShape(250, 250, 35, 100, 300);
->>>>>>> parent of 1c3f554... Add percentage of prevLength as modifier
 });
 
 function generateRandomNumber(min, max) {
@@ -75,7 +73,6 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
     // console.log("Length: " + length + " Angle: " + angle);
     // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + length);
     polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, a, b, angle) + ",";
-=======
     if(prevLength) {
       distance = determineLengthFactor(minDistance, maxDistance, prevLength);
       currMin = distance[0];
@@ -86,7 +83,6 @@ function createShape(bCircleCenterX, bCircleCenterY, numSides, minDistance, maxD
     //console.log("Length: " + length + " Angle: " + angle);
     console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + length);
     polygon += polarToCartesian(bCircleCenterX, bCircleCenterY, length, angle) + ",";
->>>>>>> parent of 1c3f554... Add percentage of prevLength as modifier
     angle += angleIncrement;
     //angle += generateRandomNumber(angle, angle + angleIncrement);
   }
