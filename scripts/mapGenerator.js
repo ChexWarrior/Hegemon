@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         globals.boardWidth / 2, 
         globals.boardHeight / 2, 
         30, 
-        100, 
+        15, 
         200
     );
 });
@@ -34,7 +34,8 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 }
 
 //TODO: Need a way to gradually increase and decreaes heights between points
-//
+//We need a way to retain randomness while not allow a huge jump in distance between two
+//consectutive points, there should still be a chance of a jump however
 function graduateLength(min, max, prevLength) {
 
 } 
@@ -45,26 +46,25 @@ function createShape(centerXPos, centerYPos, numSides, minDistance, maxDistance)
         angleIncrement = 360 / numSides,
         angle = 0,
         randomLength = 0,
-        prevLength = 0,
         currMax = maxDistance,
         currMin = minDistance,
         index;
-    console.log("x: " + centerXPos + " y:" + centerYPos);
+    //console.log("x: " + centerXPos + " y:" + centerYPos);
     for(index = 0; index < numSides; index += 1) {
         randomLength = generateRandomNumber(minDistance, maxDistance);      
         pathArray[index] = polarToCartesian(centerXPos, centerYPos, randomLength, angle) + ",";
         randomLength = generateRandomNumber(currMin, currMax);
-        prevLength = randomLength;
-        console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + randomLength);
+        console.log("Length: " + randomLength);
+        // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + randomLength);
         angle += angleIncrement;
     }
-    console.log("pathArray: " + pathArray);
+    // console.log("pathArray: " + pathArray);
     pathString = "M" + pathArray[0];
     for(index = 1; index < pathArray.length; index += 1) {
         pathString += pathArray[index].toString();
     }
     pathString = pathString.substr(0, pathString.lastIndexOf(",")) + "Z";
-    console.log("pathString: " + pathString);
+    // console.log("pathString: " + pathString);
     var shape = globals.boardElement.path(pathString);
         shape.attr({
         fill: "gray",
