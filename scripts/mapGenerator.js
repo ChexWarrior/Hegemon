@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     createShape(
         globals.boardWidth / 2, 
         globals.boardHeight / 2, 
-        30, 
         15, 
+        100, 
         200
     );
 });
@@ -37,7 +37,19 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 //We need a way to retain randomness while not allow a huge jump in distance between two
 //consectutive points, there should still be a chance of a jump however
 function graduateLength(min, max, prevLength) {
-
+    //maybe we need to determine what TOO much of a difference is between min and max
+    //min 100 to max 500 100 to 200 is a big distane try 1/5?
+    //don't allow a single change over the break point at a time?
+    if(prevLength > 0) {
+        var breakPoint = (max - min) / 10;
+        if(generateRandomNumber(1,100) > 50) {
+            return generateRandomNumber(breakPoint, max);
+        } else {
+            return generateRandomNumber(min, breakPoint);
+        }
+    } else {
+        return generateRandomNumber(min, max);
+    }
 } 
 
 function createShape(centerXPos, centerYPos, numSides, minDistance, maxDistance) {
@@ -51,9 +63,8 @@ function createShape(centerXPos, centerYPos, numSides, minDistance, maxDistance)
         index;
     //console.log("x: " + centerXPos + " y:" + centerYPos);
     for(index = 0; index < numSides; index += 1) {
-        randomLength = generateRandomNumber(minDistance, maxDistance);      
+        randomLength = graduateLength(currMin, currMax, randomLength);
         pathArray[index] = polarToCartesian(centerXPos, centerYPos, randomLength, angle) + ",";
-        randomLength = generateRandomNumber(currMin, currMax);
         console.log("Length: " + randomLength);
         // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + randomLength);
         angle += angleIncrement;
