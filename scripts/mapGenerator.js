@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     createShape(
         globals.boardWidth / 2, 
         globals.boardHeight / 2, 
-        15, 
-        100, 
+        20, 
+        50, 
         200
     );
 });
@@ -56,18 +56,33 @@ function createShape(centerXPos, centerYPos, numSides, minDistance, maxDistance)
     var pathArray = [],
         pathString = "",
         angleIncrement = 360 / numSides,
+        angleChangeMax = angleIncrement + 15,
+        changeToIncrease,
         angle = 0,
         randomLength = 0,
+        lastAngle,
+        stopAngleChange = true,
         currMax = maxDistance,
         currMin = minDistance,
         index;
     //console.log("x: " + centerXPos + " y:" + centerYPos);
     for(index = 0; index < numSides; index += 1) {
-        randomLength = graduateLength(currMin, currMax, randomLength);
+        //randomLength = graduateLength(currMin, currMax, randomLength);
+        randomLength = generateRandomNumber(currMin, currMax);
         pathArray[index] = polarToCartesian(centerXPos, centerYPos, randomLength, angle) + ",";
         console.log("Length: " + randomLength);
         // console.log("Current Min: " + currMin + " Current Max: " + currMax + " Length: " + randomLength);
-        angle += angleIncrement;
+        //angle += angleIncrement;
+        chanceToIncrease = generateRandomNumber(1,100);
+        lastAngle = angle;
+        angle += generateRandomNumber(angleIncrement, angleChangeMax);
+
+        if(angle > 360) {
+            angle = 360;
+            break;
+        }
+
+        console.log("Angle: " + angle);
     }
     // console.log("pathArray: " + pathArray);
     pathString = "M" + pathArray[0];
