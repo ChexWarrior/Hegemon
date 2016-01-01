@@ -3,36 +3,39 @@ function ranNum(min, max) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    var voronoi = new Voronoi();
-    var bbox = {
-        xl: 0,
-        xr: 800,
-        yt: 0,
-        yb: 800
-    };
-    var sites = [];
-
-    for(var i = 0; i < 35; i += 1) {
-        sites.push({
-            x: ranNum(0, 700),
-            y: ranNum(0, 700)
-        });
-    }
-
-    var diagram = voronoi.compute(sites, bbox),
-        snap = Snap("#map"),
+    var voronoi = new Voronoi(),
+        bbox = {
+            xl: 0,
+            xr: 800,
+            yt: 0,
+            yb: 800
+        },
+        sites = [],
+        diagram = null,
+        paper = Raphael(document.getElementById("map"), 800, 800),
         x = 0,
-        cells = diagram.cells,
+        cells = null,
         currentCell = null,
         startX,
         startY,
         endX,
         endY,
         cellPath,
-        pathStr = "",
-        color = "gray";
+        cellColor,
+        numCells = 55,
+        pathStr = "";
 
+    for(var i = 0; i < numCells; i += 1) {
+        sites.push({
+            x: ranNum(0, 700),
+            y: ranNum(0, 700)
+        });
+    }
+
+    diagram = voronoi.compute(sites, bbox);
     console.log(diagram);
+    cells = diagram.cells;
+
     for(i = 0; i < cells.length; i += 1) {
         currentCell = cells[i];
         pathStr = "";
@@ -46,16 +49,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 + "L" + endX + "," + endY;
         }
 
-        if(i % 2) {
-            color = "gray";
-        } else {
-            color = "white";
-        }
-
-        cellPath = snap.path(pathStr);
+        cellPath = paper.path(pathStr);
         cellPath.attr({
             stroke: "black",
-            fill: color
+            fill: "gray"
+        });
+        cellPath.hover(function() {
+            this.attr({
+                fill: "green"
+            });
+        }, function() {
+            this.attr({
+                fill: "gray"
+            });
         });
     }
 });
