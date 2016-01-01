@@ -8,7 +8,7 @@ var mapGenerator = {
     },
     sites: [],
     paper: Raphael(document.getElementById("map"), 800, 800),
-    allPaths: [],
+    territories: [],
     //methods
     init: function() {
         var x = 0,
@@ -53,7 +53,7 @@ var mapGenerator = {
             cellPath = this.paper.path(pathStr);
             cellPath.attr({
                 stroke: "black",
-                fill: "gray"
+                fill: "#2F4FED"
             });
             cellPath.hover(function() {
                 this.attr({
@@ -61,12 +61,14 @@ var mapGenerator = {
                 });
             }, function() {
                 this.attr({
-                    fill: "gray"
+                    fill: "#2F4FED"
                 });
             });
 
-            //add this path to collection
-            this.allPaths.push(cellPath);
+            //add a new territory to collection
+            this.territories.push({
+                path: cellPath
+            });
         }
     },
     determineTerrainType: function() {
