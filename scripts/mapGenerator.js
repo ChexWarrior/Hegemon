@@ -69,6 +69,21 @@ var mapGenerator = {
             this.allPaths.push(cellPath);
         }
     },
+    determineTerrainType: function() {
+        var numPaths = this.territories.length,
+            randIndex = this.ranNum(0, numPaths - 1),
+            chosenPath = numPaths[randIndex],
+            adjPaths = [];
+        adjPaths = this.getAdjPaths(chosenPath);
+    },
+    getAdjPaths: function(chosenPath) {
+        var adjPaths = [];
+        //randomly choose paths and make all adjacent paths "land"
+        //how to tell if two polygons are adjacent:
+        //  1) they share a side
+        
+        return adjPaths;
+    },
     ranNum: function(min, max){
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
