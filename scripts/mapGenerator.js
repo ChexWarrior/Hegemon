@@ -23,7 +23,8 @@ var mapGenerator = {
             cellPath,
             cellColor,
             numCells = 55,
-            pathStr = "";
+            pathStr = "",
+            onEdge;
   
         // create random points
         for(var i = 0; i < numCells; i += 1) {
@@ -40,11 +41,18 @@ var mapGenerator = {
         for(i = 0; i < cells.length; i += 1) {
             currentCell = cells[i];
             pathStr = "";
+            onEdge = false;
             for(x = 0; x < currentCell.halfedges.length; x += 1) {
                 startX = currentCell.halfedges[x].getStartpoint().x;
                 startY = currentCell.halfedges[x].getStartpoint().y;
                 endX = currentCell.halfedges[x].getEndpoint().x;
                 endY = currentCell.halfedges[x].getEndpoint().y;
+
+                if(startX === 0 || startX >= 800 || endX === 0 || endX >= 800 ||
+                    startY === 0 || startY >= 800 || endY === 0 || endY >= 800) {
+                    console.log('On edge!');
+                    onEdge = true;
+                }
 
                 pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY 
                     + "L" + endX + "," + endY;
@@ -52,18 +60,20 @@ var mapGenerator = {
 
             cellPath = this.paper.path(pathStr);
             cellPath.attr({
-                stroke: "black",
-                fill: "#2F4FED"
+                stroke: "#000000",
+                fill: onEdge ? "#2F4FED" : "#6B4B2A"
             });
-            cellPath.hover(function() {
-                this.attr({
-                    fill: "green"
-                });
-            }, function() {
-                this.attr({
-                    fill: "#2F4FED"
-                });
-            });
+            // cellPath.hover(function() {
+            //     this.attr({
+            //         stroke: "#000000",
+            //         fill: onEdge ? "#2F4FED" : "#6B4B2A"
+            //     });
+            // }, function() {
+            //     this.attr({
+            //         stroke: "#000000",
+            //         fill: onEdge ? "#2F4FED" : "#6B4B2A"
+            //     });
+            // });
 
             //add a new territory to collection
             this.territories.push({
