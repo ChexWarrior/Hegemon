@@ -48,12 +48,6 @@ var mapGenerator = {
                 endX = currentCell.halfedges[x].getEndpoint().x;
                 endY = currentCell.halfedges[x].getEndpoint().y;
 
-                if(startX === 0 || startX >= 800 || endX === 0 || endX >= 800 ||
-                    startY === 0 || startY >= 800 || endY === 0 || endY >= 800) {
-                    console.log('On edge!');
-                    onEdge = true;
-                }
-
                 pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY 
                     + "L" + endX + "," + endY;
             }
