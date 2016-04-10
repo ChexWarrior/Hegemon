@@ -51,15 +51,44 @@ var mapGenerator = {
 
                 //TODO: Force all cells to move edges closer to center by one, this
                 //will ensure that each cells border can be shown w/o overlap. Use
-                //each side positions relative to site point to determine calculations
-                //Take both points of each edge and subtract the site point from them
-                //If both edge points have a negative x then the edge is to the left of the site
-                //If both edge points have a positive x then the edge is to the right
-                //If both edge points have a negative y then the edge is above the site
-                //If both edge points have a positive y then the edge is below the site
-                //Unless a line is straight we need to adjust it's x and y by one tick closer 
-                //to the site. A line is straight if it has an unchanging x or y in both start and
-                //end edges.
+                //each side positions relative to site point to determine calculations...
+                //Subtract the center coordinates from each edges point
+                // A negative y indicates it is above the current point
+                // A positive y indicates it is below the current point
+                // A negative x indicates it is to the left of the current point
+                // A positive x indicates it is to the right of the current point
+
+                //to the right
+                if(startX - currentCell.site.x > 0) {
+                    startX -= 1;
+                //to the left
+                } else if (startX - currentCell.site.x < 0) {
+                    startX += 1;
+                }
+
+                //to the right
+                if(endX - currentCell.site.x > 0) {
+                    endX -= 1;
+                //to the left
+                } else if (endX - currentCell.site.x < 0) {
+                    endX += 1;
+                }
+
+                //below
+                if(startY - currentCell.site.y > 0) {
+                    startY -= 1;
+                //above
+                } else if (startY - currentCell.site.y < 0) {
+                    startY += 1;
+                }
+
+                //below
+                if(endY - currentCell.site.y > 0) {
+                    endY -= 1;
+                //above
+                } else if (endY - currentCell.site.y < 0) {
+                    endY += 1;
+                }
 
                 pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY 
                     + "L" + endX + "," + endY;
@@ -75,6 +104,7 @@ var mapGenerator = {
 
             cellPath.attr({
                 stroke: "#000000",
+                //'stroke-width': 2,
                 fill: onEdge ? "#2F4FED" : "#6B4B2A"
             });
 
