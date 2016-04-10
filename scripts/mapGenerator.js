@@ -49,6 +49,18 @@ var mapGenerator = {
                 endX = currentCell.halfedges[x].getEndpoint().x;
                 endY = currentCell.halfedges[x].getEndpoint().y;
 
+                //TODO: Force all cells to move edges closer to center by one, this
+                //will ensure that each cells border can be shown w/o overlap. Use
+                //each side positions relative to site point to determine calculations
+                //Take both points of each edge and subtract the site point from them
+                //If both edge points have a negative x then the edge is to the left of the site
+                //If both edge points have a positive x then the edge is to the right
+                //If both edge points have a negative y then the edge is above the site
+                //If both edge points have a positive y then the edge is below the site
+                //Unless a line is straight we need to adjust it's x and y by one tick closer 
+                //to the site. A line is straight if it has an unchanging x or y in both start and
+                //end edges.
+
                 pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY 
                     + "L" + endX + "," + endY;
             }
