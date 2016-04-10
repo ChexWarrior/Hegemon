@@ -24,6 +24,7 @@ var mapGenerator = {
             cellColor,
             numCells = 55,
             pathStr = "",
+            sitePoint,
             onEdge;
   
         // create random points
@@ -53,24 +54,32 @@ var mapGenerator = {
             }
 
             cellPath = this.paper.path(pathStr);
+
+            //draw site point
+            sitePoint = this.paper.circle(currentCell.site.x, currentCell.site.y, 2);
+            sitePoint.attr({
+                fill: '#D61515'
+            });
+
             cellPath.attr({
                 stroke: "#000000",
                 fill: onEdge ? "#2F4FED" : "#6B4B2A"
             });
-            // cellPath.hover(function() {
-            //     this.attr({
-            //         stroke: "#000000",
-            //         fill: onEdge ? "#2F4FED" : "#6B4B2A"
-            //     });
-            // }, function() {
-            //     this.attr({
-            //         stroke: "#000000",
-            //         fill: onEdge ? "#2F4FED" : "#6B4B2A"
-            //     });
-            // });
+
+            cellPath.hover(function() {
+                this.attr({
+                    stroke: "#D61515"
+                });
+            }, function() {
+                this.attr({
+                    stroke: "#000000"
+                });
+            });
 
             //add a new territory to collection
             this.territories.push({
+                startPoint: [startX, startY],
+                endPoint: [endX, endY], 
                 path: cellPath
             });
         }
