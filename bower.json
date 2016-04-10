@@ -1,0 +1,27 @@
+{
+  "name": "Hegemon",
+  "homepage": "https://github.com/ChexWarrior/Hegemon",
+  "authors": [
+    "ChexWarrior <aplehm@gmail.com>"
+  ],
+  "description": "Risk Clone",
+  "main": "",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Javascript-Voronoi": "git@github.com:gorhill/Javascript-Voronoi.git#^1.0.0",
+    "raphael": "^2.1.4",
+    "requirejs": "git@github.com:requirejs/requirejs.git#^2.2.0"
+  }
+}
