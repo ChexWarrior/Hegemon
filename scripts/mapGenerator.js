@@ -57,18 +57,19 @@ var mapGenerator = {
 
             cellPath.attr({
                 stroke: "#000000",
-                'stroke-opacity': .5,
-                'stroke-width': 2,
+                'stroke-width': .3,
                 fill: onEdge ? "#2F4FED" : "#6B4B2A"
             });
 
             cellPath.hover(function() {
                 this.attr({
-                    stroke: "#D61515"
+                    stroke: "#D61515",
+                    'stroke-width': 2
                 });
             }, function() {
                 this.attr({
-                    stroke: "#000000"
+                    stroke: "#000000",
+                    'stroke-width': .3
                 });
             });
 
