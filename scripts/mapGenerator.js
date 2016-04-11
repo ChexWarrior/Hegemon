@@ -57,7 +57,6 @@ var mapGenerator = {
 
             cellPath.attr({
                 stroke: "#000000",
-                'stroke-width': .3,
                 fill: onEdge ? "#2F4FED" : "#6B4B2A"
             });
 
@@ -66,10 +65,13 @@ var mapGenerator = {
                     stroke: "#D61515",
                     'stroke-width': 2
                 });
+
+                this.toFront();
+
             }, function() {
                 this.attr({
                     stroke: "#000000",
-                    'stroke-width': .3
+                    'stroke-width': 1
                 });
             });
 
