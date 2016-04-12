@@ -8,7 +8,7 @@ var mapGenerator = {
     },
     sites: [],
     paper: Raphael(document.getElementById("map"), 800, 800),
-    territories: [],
+    territories: {},
     //methods
     init: function() {
         var x = 0,
@@ -26,9 +26,9 @@ var mapGenerator = {
             pathStr = "",
             sitePoint,
             onEdge;
-  
+
         // create random points
-        for(var i = 0; i < numCells; i += 1) {
+        for (var i = 0; i < numCells; i += 1) {
             this.sites.push({
                 x: this.ranNum(0, 800),
                 y: this.ranNum(0, 800)
@@ -39,18 +39,17 @@ var mapGenerator = {
         console.log(diagram);
         cells = diagram.cells;
 
-        for(i = 0; i < cells.length; i += 1) {
+        for (i = 0; i < cells.length; i += 1) {
             currentCell = cells[i];
             pathStr = '';
             onEdge = false;
-            for(x = 0; x < currentCell.halfedges.length; x += 1) {
+            for (x = 0; x < currentCell.halfedges.length; x += 1) {
                 startX = currentCell.halfedges[x].getStartpoint().x;
                 startY = currentCell.halfedges[x].getStartpoint().y;
                 endX = currentCell.halfedges[x].getEndpoint().x;
                 endY = currentCell.halfedges[x].getEndpoint().y;
 
-                pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY 
-                    + "L" + endX + "," + endY;
+                pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY + "L" + endX + "," + endY;
             }
 
             cellPath = this.paper.path(pathStr);
@@ -75,19 +74,27 @@ var mapGenerator = {
                 });
             });
 
-
-
             //add a new territory to collection
-            this.territories.push({
+            this.territories[cells[i].site.voronoiId.toString()] = {
                 startPoint: [startX, startY],
                 endPoint: [endX, endY],
                 site: cells[i].site,
                 edges: cells[i].halfedges,
                 path: cellPath
-            });
+            };
         }
+
+        console.log(this.territories);
+
+        // var adjPaths;
+        // for (index = 0; index < this.territories.length; index += 1) {
+        //     adjPaths = [];
+        //     for (x = 0; x < this.territories[index].edges.length; x += 1) {
+
+        //     }
+        // }
     },
-    ranNum: function(min, max){
+    ranNum: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 };
