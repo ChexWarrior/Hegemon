@@ -8,7 +8,7 @@ var mapGenerator = {
     },
     sites: [],
     paper: Raphael(document.getElementById("map"), 800, 800),
-    territories: {},
+    territories: [],
     //methods
     init: function() {
         var x = 0,
@@ -79,20 +79,27 @@ var mapGenerator = {
                 startPoint: [startX, startY],
                 endPoint: [endX, endY],
                 site: cells[i].site,
-                edges: cells[i].halfedges,
+                halfedges: cells[i].halfedges,
                 path: cellPath
             };
         }
 
+        var adjPaths;
+
+        for (index = 0; index < this.territories.length; index += 1) {
+            adjPaths = [];
+            for (x = 0; x < this.territories[index].halfedges.length; x += 1) {
+                if (this.territories[index].halfedges[x].edge.lSite) {
+                    adjPaths.push(this.territories[index].halfedges[x].edge.lSite.voronoiId);
+                }
+                
+                if (this.territories[index].halfedges[x].edge.rSite) {
+                    adjPaths.push(this.territories[index].halfedges[x].edge.rSite.voronoiId);
+                }
+            }
+        }
+
         console.log(this.territories);
-
-        // var adjPaths;
-        // for (index = 0; index < this.territories.length; index += 1) {
-        //     adjPaths = [];
-        //     for (x = 0; x < this.territories[index].edges.length; x += 1) {
-
-        //     }
-        // }
     },
     ranNum: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
