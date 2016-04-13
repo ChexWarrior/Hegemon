@@ -73,8 +73,36 @@ function initialize(bbox, canvas, numCells) {
     return territories;
 }
 
-function getAdjacentTerritories(territories) {
+function getAdjacentTerritories(territories, territory) {
+    var edges = territory.cell.halfedges,
+        path,
+        adjPaths = [],
+        adjIds = [];
+    //get the ids
+    for (var i = 0; i < edges.length; i += 1) {
+        if (edges[i].edge.lSite && edges[i].edge.lSite.voronoiId !== territory.id) {
+            adjIds.push(edges[i].edge.lSite.voronoiId);
+        }
 
+        if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
+            adjIds.push(edges[i].edge.rSite.voronoiId);
+        }
+    }
+    //get the paths
+    for (i = 0; i < adjIds.length; i += 1) {
+        path = territories[adjIds[i]].path;
+        adjPaths.push(path);
+    }
+    //add the event
+    territory.path.click(function() {
+        for (i = 0; i < adjPaths.length; i += 1) {
+            adjPaths[i].attr({
+                fill: '#257D32'
+            });
+        }
+    });
+
+    return adjPaths;
 }
 
 var territories = {},
