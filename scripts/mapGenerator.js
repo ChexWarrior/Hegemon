@@ -69,13 +69,22 @@ function initialize(bbox, canvas, numCells) {
         };
     }
 
-    console.log(territories);
+    return territories;
 }
 
+function getAdjacentTerritories(territories) {
+
+}
+
+var territories = {},
+    bbox = {
+        xl: 0,
+        xr: 800,
+        yt: 0,
+        yb: 800
+    },
+    canvas = Raphael(document.getElementById("map"), 800, 800),
+    numCells = 55;
+
 //run app
-initialize({
-    xl: 0,
-    xr: 800,
-    yt: 0,
-    yb: 800
-}, Raphael(document.getElementById("map"), 800, 800), 55);
+var territories = initialize(bbox, canvas, numCells);
