@@ -84,10 +84,9 @@ var territories = {},
         yt: 0,
         yb: 800
     },
-    canvas = Raphael(document.getElementById("map"), 800, 800),
+    canvas = Raphael(document.getElementById('map'), 800, 800),
     numCells = 55;
 
-//run app
 var territories = initialize(bbox, canvas, numCells);
 
 for(var territory in territories) {
