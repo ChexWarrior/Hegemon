@@ -61,7 +61,14 @@ function initialize(bbox, canvas, numCells) {
                 'stroke-width': 1
             });
         });
+
+        //add territories to map by voronoi ID
+        territories[currentCell.site.voronoiId] = {
+            path: cellPath
+        };
     }
+
+    console.log(territories);
 }
 
 //run app
