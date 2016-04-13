@@ -94,3 +94,5 @@ for(var territory in territories) {
         territories[territory].adjTerritories = getAdjacentTerritories(territories[territory]);
     }
 }
+
+console.log(territories);
