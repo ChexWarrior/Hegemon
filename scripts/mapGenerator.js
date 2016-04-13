@@ -64,7 +64,7 @@ function initialize(bbox, canvas, numCells) {
 
         //add territories to map by voronoi ID
         territories[currentCell.site.voronoiId] = {
-            path: cellPath
+            path: cellPath,
             cell: currentCell
         };
     }
