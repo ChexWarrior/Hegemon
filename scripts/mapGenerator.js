@@ -88,3 +88,9 @@ var territories = {},
 
 //run app
 var territories = initialize(bbox, canvas, numCells);
+
+for(var territory in territories) {
+    if(territories.hasOwnProperty(territory)) {
+        territories[territory].adjTerritories = getAdjacentTerritories(territories[territory]);
+    }
+}
