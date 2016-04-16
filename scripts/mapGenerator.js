@@ -1,5 +1,15 @@
 'use strict';
 
+/**
+ * Checklist
+ * =========
+ * 1) Generate territories (check)
+ * 2) Distinguish territories (check)
+ * 3) Get territories adjacent to another territory
+ * 4) Ensure territories are of proper size
+ * 5) Draw units on territories
+ */
+
 function ranNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
