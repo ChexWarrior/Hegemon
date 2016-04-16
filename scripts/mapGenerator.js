@@ -81,6 +81,9 @@ function initialize(bbox, canvas, numCells) {
             path: cellPath,
             cell: currentCell
         };
+
+        territories[currentCell.site.voronoiId].area = getAreaOfTerritory(
+            territories[currentCell.site.voronoiId]);
     }
 
     return territories;
@@ -113,6 +116,25 @@ function getAdjacentTerritories(territories, territory) {
     return adjPaths;
 }
 
+function getAreaOfTerritory(territory) {
+    var area = 0,
+        xyNext,
+        xy,
+        edges = territory.cell.halfedges;
+
+    for(var i = 0; i < edges.length; i += 1) {
+        xy = edges[i].getStartpoint();
+        xyNext = (edges[i + 1]) 
+            ? edges[i + 1].getStartpoint()
+            : edges[0].getStartpoint();
+
+        area += xy.x * xyNext.y - xy.y * xyNext.x
+    }
+
+    return Math.abs(area / 2);
+}
+
+//start app
 var territories = {},
     bbox = {
         xl: 0,
