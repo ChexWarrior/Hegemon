@@ -116,7 +116,7 @@ function getAdjacentTerritories(territories, territory) {
     return adjPaths;
 }
 
-function getAreaOfTerritory(territory) {\
+function getAreaOfTerritory(territory) {
     //Area of Polygon: www.mathopenref.com/coordpolygonarea2.html
     var area = 0,
         xyNext,
