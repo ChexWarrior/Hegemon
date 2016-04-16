@@ -10,7 +10,7 @@
  *      a) What is "too small"? Use area of polyon...
  *      b) How to fix? Merge into adj territory?
  * 5) Draw units on territories
- * 6) Find centroid of territories
+ * 6) Find center of territories (done, approx)
  */
 
 function ranNum(min, max) {
