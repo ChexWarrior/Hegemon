@@ -3,9 +3,9 @@
 /**
  * Checklist
  * =========
- * 1) Generate territories (check)
- * 2) Distinguish territories (check)
- * 3) Get territories adjacent to another territory
+ * 1) Generate territories (done)
+ * 2) Distinguish territories (done)
+ * 3) Get territories adjacent to another territory (done)
  * 4) Ensure territories are of proper size
  * 5) Draw units on territories
  */
@@ -123,7 +123,7 @@ var territories = {},
         yb: 800
     },
     canvas = Raphael(document.getElementById('map'), 800, 800),
-    numCells = 55;
+    numCells = 42;
 
 var territories = initialize(bbox, canvas, numCells);
 
