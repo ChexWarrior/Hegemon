@@ -84,6 +84,14 @@ function initialize(bbox, canvas, numCells) {
 
         territories[currentCell.site.voronoiId].area = getAreaOfTerritory(
             territories[currentCell.site.voronoiId]);
+
+        territories[currentCell.site.voronoiId].center = getCenter(
+            territories[currentCell.site.voronoiId]);
+
+        canvas.circle(territories[currentCell.site.voronoiId].center[0],
+            territories[currentCell.site.voronoiId].center[1], 2).attr({
+                fill: '#274BBE'
+            });
     }
 
     return territories;
@@ -116,8 +124,29 @@ function getAdjacentTerritories(territories, territory) {
     return adjPaths;
 }
 
+function getCenter(territory) {
+    // Find approx center
+    //http://stackoverflow.com/questions/1691928/put-label-in-the-center-of-an-svg-path
+    var pathLength = territory.path.getTotalLength(),
+        step = pathLength / 100,
+        point,
+        xAvg = 0,
+        yAvg = 0;
+
+    for(var dist = 0; dist < pathLength; dist += step) {
+        point = territory.path.getPointAtLength(dist);
+        xAvg += point.x;
+        yAvg += point.y;
+    }
+
+    return [
+        xAvg / 100,
+        yAvg / 100
+    ];
+}
+
 function getAreaOfTerritory(territory) {
-    //Area of Polygon: www.mathopenref.com/coordpolygonarea2.html
+    // Area of Polygon: www.mathopenref.com/coordpolygonarea2.html
     var area = 0,
         xyNext,
         xy,
