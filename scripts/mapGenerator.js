@@ -7,7 +7,10 @@
  * 2) Distinguish territories (done)
  * 3) Get territories adjacent to another territory (done)
  * 4) Ensure territories are of proper size
+ *      a) What is "too small"? Use area of polyon...
+ *      b) How to fix? Merge into adj territory?
  * 5) Draw units on territories
+ * 6) Find centroid of territories
  */
 
 function ranNum(min, max) {
