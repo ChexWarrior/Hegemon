@@ -210,4 +210,12 @@ for (var territory in territories) {
     }
 }
 
+for (var territory in territories) {
+    if (territories.hasOwnProperty(territory)) {
+        if (territories[territory].area < MIN_AREA) {
+            combineTerritories(territories[territory]);
+        }
+    }
+}
+
 console.log(territories);
