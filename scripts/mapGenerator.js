@@ -123,12 +123,12 @@ function getAdjacentTerritories(territories, territory) {
             ];
         }
 
-        if(adjPathObj) {
+        if (Object.keys(adjPathObj).length > 0) {
             adjPaths.push(adjPathObj);
         }
     }
- 
-   territory.path.click(function() {
+
+    territory.path.click(function() {
         for (i = 0; i < adjPaths.length; i += 1) {
             adjPaths[i].path.attr({
                 fill: '#257D32'
