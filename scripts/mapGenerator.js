@@ -109,12 +109,14 @@ function getAdjacentTerritories(territories, territory) {
         adjPathObj = {};
         if (edges[i].edge.lSite && edges[i].edge.lSite.voronoiId !== territory.id) {
             adjPathObj.path = territories[edges[i].edge.lSite.voronoiId].path;
+            adjPathObj.pathStr = territories[edges[i].edge.lSite.voronoiId].pathStr;
             adjPathObj.adjSide = [
                 territories[edges[i].edge.lSite.voronoiId].va,
                 territories[edges[i].edge.lSite.voronoiId].vb
             ];
         } else if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
             adjPathObj.path = territories[edges[i].edge.rSite.voronoiId].path;
+            adjPathObj.pathStr = territories[edges[i].edge.rSite.voronoiId].pathStr;
             adjPathObj.adjSide = [
                 territories[edges[i].edge.rSite.voronoiId].va,
                 territories[edges[i].edge.rSite.voronoiId].vb
