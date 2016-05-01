@@ -187,6 +187,8 @@ function combineTerritories(territory) {
 
     console.log(adjTerritorySegements);
     console.log(pathSegements);
+
+    //merge paths based on shared side
 }
 
 //start app
