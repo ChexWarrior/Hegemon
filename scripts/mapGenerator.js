@@ -91,8 +91,8 @@ function initialize(bbox, canvas, numCells) {
 
         canvas.circle(territories[currentCell.site.voronoiId].center[0],
             territories[currentCell.site.voronoiId].center[1], 2).attr({
-                fill: '#274BBE'
-            });
+            fill: '#274BBE'
+        });
     }
 
     return territories;
@@ -140,7 +140,7 @@ function getAdjacentTerritories(territories, territory) {
 }
 
 function getCenter(territory) {
-    // Find approx center
+    //Find approx center
     //http://stackoverflow.com/questions/1691928/put-label-in-the-center-of-an-svg-path
     var pathLength = territory.path.getTotalLength(),
         step = pathLength / 100,
@@ -148,7 +148,7 @@ function getCenter(territory) {
         xAvg = 0,
         yAvg = 0;
 
-    for(var dist = 0; dist < pathLength; dist += step) {
+    for (var dist = 0; dist < pathLength; dist += step) {
         point = territory.path.getPointAtLength(dist);
         xAvg += point.x;
         yAvg += point.y;
@@ -167,11 +167,9 @@ function getAreaOfTerritory(territory) {
         xy,
         edges = territory.cell.halfedges;
 
-    for(var i = 0; i < edges.length; i += 1) {
+    for (var i = 0; i < edges.length; i += 1) {
         xy = edges[i].getStartpoint();
-        xyNext = (edges[i + 1]) 
-            ? edges[i + 1].getStartpoint()
-            : edges[0].getStartpoint();
+        xyNext = (edges[i + 1]) ? edges[i + 1].getStartpoint() : edges[0].getStartpoint();
 
         area += xy.x * xyNext.y - xy.y * xyNext.x
     }
@@ -200,7 +198,8 @@ var territories = {},
         yb: 800
     },
     canvas = Raphael(document.getElementById('map'), 800, 800),
-    numCells = 42;
+    numCells = 42,
+    MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
 
