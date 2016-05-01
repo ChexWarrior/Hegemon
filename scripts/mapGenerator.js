@@ -106,9 +106,7 @@ function getAdjacentTerritories(territories, territory) {
     for (var i = 0; i < edges.length; i += 1) {
         if (edges[i].edge.lSite && edges[i].edge.lSite.voronoiId !== territory.id) {
             adjPaths.push(territories[edges[i].edge.lSite.voronoiId].path);
-        }
-
-        if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
+        } else if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
             adjPaths.push(territories[edges[i].edge.rSite.voronoiId].path);
         }
     }
