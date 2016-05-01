@@ -179,6 +179,18 @@ function getAreaOfTerritory(territory) {
     return Math.abs(area / 2);
 }
 
+function combineTerritories(territory) {
+    //grab first adj territory
+    var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
+        adjLineStart = territory.adjTerritories[0].adjSide[0],
+        adjLineEnd = territory.adjTerritories[0].adjSide[1],
+        //split path into segements
+        pathSegements = Raphael.parsePathString(territory.pathStr);
+
+    console.log(adjTerritorySegements);
+    console.log(pathSegements);
+}
+
 //start app
 var territories = {},
     bbox = {
