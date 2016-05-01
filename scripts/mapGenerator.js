@@ -100,20 +100,34 @@ function initialize(bbox, canvas, numCells) {
 function getAdjacentTerritories(territories, territory) {
     var edges = territory.cell.halfedges,
         path,
+        adjPathObj,
         adjPaths = [],
         adjIds = [];
     //get the ids
     for (var i = 0; i < edges.length; i += 1) {
+        adjPathObj = {};
         if (edges[i].edge.lSite && edges[i].edge.lSite.voronoiId !== territory.id) {
-            adjPaths.push(territories[edges[i].edge.lSite.voronoiId].path);
+            adjPathObj.path = territories[edges[i].edge.lSite.voronoiId].path;
+            adjPathObj.adjSide = [
+                territories[edges[i].edge.lSite.voronoiId].va,
+                territories[edges[i].edge.lSite.voronoiId].vb
+            ];
         } else if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
-            adjPaths.push(territories[edges[i].edge.rSite.voronoiId].path);
+            adjPathObj.path = territories[edges[i].edge.rSite.voronoiId].path;
+            adjPathObj.adjSide = [
+                territories[edges[i].edge.rSite.voronoiId].va,
+                territories[edges[i].edge.rSite.voronoiId].vb
+            ];
+        }
+
+        if(adjPathObj) {
+            adjPaths.push(adjPathObj);
         }
     }
  
    territory.path.click(function() {
         for (i = 0; i < adjPaths.length; i += 1) {
-            adjPaths[i].attr({
+            adjPaths[i].path.attr({
                 fill: '#257D32'
             });
         }
