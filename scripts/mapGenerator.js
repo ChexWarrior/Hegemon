@@ -183,12 +183,77 @@ function combineTerritories(territory) {
         adjLineStart = territory.adjTerritories[0].adjSide[0],
         adjLineEnd = territory.adjTerritories[0].adjSide[1],
         //split path into segements
-        pathSegements = Raphael.parsePathString(territory.pathStr);
+        pathSegements = Raphael.parsePathString(territory.pathStr),
+        currentX,
+        currentY,
+        spliceIndex,
+        combinedPath = 'M ';
 
+
+    console.log('Adj Territory Segement: ');
     console.log(adjTerritorySegements);
+
+    console.log('Target Territory Segement: ');
     console.log(pathSegements);
 
-    //merge paths based on shared side
+    console.log('Adj Line Start: ');
+    console.log(adjLineStart);
+
+    console.log('Adj Line End: ');
+    console.log(adjLineEnd);
+
+    // canvas.path('M' + adjLineStart.x + ' ' + adjLineStart.y 
+    //     + 'L' + adjLineEnd.x + ' ' + adjLineEnd.y).attr({
+    //         stroke: 'red'
+    //     });
+
+    for(var x = 0; x < adjTerritorySegements.length; x += 1) {
+        currentX = adjTerritorySegements[x][1];1
+        currentY = adjTerritorySegements[x][2];
+
+        //if we've arrived at the shared line segement of the two paths...
+        if(currentX == adjLineStart.x && currentY == adjLineStart.y) {
+            spliceIndex = x;
+            break;
+        } 
+    }
+    var deleteIndex = [];
+    //remove the shared line from the smaller territorys path
+    for(var z = 0; z < pathSegements.length; z += 1) {
+        currentX = pathSegements[z][1];
+        currentY = pathSegements[z][2];
+
+        //if we've arrived at the shared line segement of the two paths...
+        if(currentX == adjLineStart.x && currentY == adjLineStart.y) {
+
+            deleteIndex.push(z);
+        } else if(currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
+            deleteIndex.push(z);
+        }
+    }
+
+    pathSegements.splice(deleteIndex[0], 1);
+    pathSegements.splice(deleteIndex[1], 1);
+
+
+    adjTerritorySegements.splice.apply(adjTerritorySegements, [spliceIndex, 0].concat(pathSegements));
+
+    console.log('Combined Path: ');
+    console.log(adjTerritorySegements);
+
+    for(var y = 0; y < adjTerritorySegements.length; y += 1) {
+        combinedPath += adjTerritorySegements[y][1] 
+                     + ' ' + adjTerritorySegements[y][2] 
+                     + 'L';
+    }
+
+    combinedPath = combinedPath.substr(0, combinedPath.lastIndexOf('L'));
+
+    console.log(combinedPath);
+
+    canvas.path(combinedPath).attr({
+        stroke: 'blue'
+    });
 }
 
 //start app
