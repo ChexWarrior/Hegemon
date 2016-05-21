@@ -165,11 +165,6 @@ function combineTerritories(territory) {
     console.log('Adj Line End: ');
     console.log(adjLineEnd);
 
-    // canvas.path('M' + adjLineStart.x + ' ' + adjLineStart.y 
-    //     + 'L' + adjLineEnd.x + ' ' + adjLineEnd.y).attr({
-    //         stroke: 'red'
-    //     });
-
     for(var x = 0; x < adjTerritorySegements.length; x += 1) {
         currentX = adjTerritorySegements[x][1];1
         currentY = adjTerritorySegements[x][2];
@@ -232,19 +227,5 @@ var territories = {},
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
-
-for (var territory in territories) {
-    if (territories.hasOwnProperty(territory)) {
-        territories[territory].adjTerritories = getAdjacentTerritories(territories, territories[territory]);
-    }
-}
-
-for (var territory in territories) {
-    if (territories.hasOwnProperty(territory)) {
-        if (territories[territory].area < MIN_AREA) {
-            combineTerritories(territories[territory]);
-        }
-    }
-}
 
 console.log(territories);
