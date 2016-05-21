@@ -57,28 +57,6 @@ function initialize(bbox, canvas, numCells) {
                             + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
 
-        cellPath = canvas.path(cellPathStr);
-
-        cellPath.attr({
-            stroke: "#000000",
-            fill: "#6B4B2A"
-        });
-
-        cellPath.hover(function() {
-            this.attr({
-                stroke: "#D61515",
-                'stroke-width': 2
-            });
-
-            this.toFront();
-
-        }, function() {
-            this.attr({
-                stroke: "#000000",
-                'stroke-width': 1
-            });
-        });
-
         //add territories to map by voronoi ID
         territories[currentCell.site.voronoiId] = {
             id: currentCell.site.voronoiId,
