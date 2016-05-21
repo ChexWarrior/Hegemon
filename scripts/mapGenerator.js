@@ -67,45 +67,29 @@ function initialize(bbox, canvas, numCells) {
 
 //TODO: Refactor
 function getAdjacentTerritories(territories, territory) {
-    var edges = territory.cell.halfedges,
-        path,
-        adjPathObj,
-        adjPaths = [],
+    var edges = territory.edges,
+        edgeLSite,
+        edgeRSite,
+        edgeIndex,
         adjIds = [];
 
-    //get the ids
-    for (var i = 0; i < edges.length; i += 1) {
+    for (edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
         adjPathObj = {};
-        if (edges[i].edge.lSite && edges[i].edge.lSite.voronoiId !== territory.id) {
-            adjPathObj.path = territories[edges[i].edge.lSite.voronoiId].path;
-            adjPathObj.pathStr = territories[edges[i].edge.lSite.voronoiId].pathStr;
-            adjPathObj.adjSide = [
-                edges[i].edge.va,
-                edges[i].edge.vb
-            ];
-        } else if (edges[i].edge.rSite && edges[i].edge.rSite.voronoiId !== territory.id) {
-            adjPathObj.path = territories[edges[i].edge.rSite.voronoiId].path;
-            adjPathObj.pathStr = territories[edges[i].edge.rSite.voronoiId].pathStr;
-            adjPathObj.adjSide = [
-                edges[i].edge.va,
-                edges[i].edge.vb
-            ];
-        }
+        //voronoi cell to left of current edge
+        edgeLSite = edges[edgeIndex].edge.lSite;
+        //voronoi cell to right of current edge
+        edgeRSite = edges[edgeIndex].edge.rSite;
 
-        if (Object.keys(adjPathObj).length > 0) {
-            adjPaths.push(adjPathObj);
+        //check each side of edge and store the id of cell that isn't the parent
+        //of this edge
+        if (edgeLSite && edgeLSite.voronoiId !== territory.voronoiId) {
+            adjIds.push(edgeLSite.voronoiId);
+        } else if (edgeRSite && edgeRSite.voronoiId !== territory.voronoiId) {
+            adjIds.push(edgeRSite.voronoiId);
         }
     }
 
-    territory.path.click(function() {
-        for (i = 0; i < adjPaths.length; i += 1) {
-            adjPaths[i].path.attr({
-                fill: '#257D32'
-            });
-        }
-    });
-
-    return adjPaths;
+    return adjIds;
 }
 
 //TODO: Refactor
@@ -161,28 +145,29 @@ function combineTerritories(territory) {
         spliceIndex,
         combinedPath = 'M ';
 
-    for(var x = 0; x < adjTerritorySegements.length; x += 1) {
-        currentX = adjTerritorySegements[x][1];1
+    for (var x = 0; x < adjTerritorySegements.length; x += 1) {
+        currentX = adjTerritorySegements[x][1];
+        1
         currentY = adjTerritorySegements[x][2];
 
         //if we've arrived at the shared line segement of the two paths...
-        if(currentX == adjLineStart.x && currentY == adjLineStart.y) {
+        if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
             spliceIndex = x;
             break;
-        } 
+        }
     }
 
     var deleteIndex = [];
     //remove the shared line from the smaller territorys path
-    for(var z = 0; z < pathSegements.length; z += 1) {
+    for (var z = 0; z < pathSegements.length; z += 1) {
         currentX = pathSegements[z][1];
         currentY = pathSegements[z][2];
 
         //if we've arrived at the shared line segement of the two paths...
-        if(currentX == adjLineStart.x && currentY == adjLineStart.y) {
+        if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
 
             deleteIndex.push(z);
-        } else if(currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
+        } else if (currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
             deleteIndex.push(z);
         }
     }
@@ -195,10 +180,8 @@ function combineTerritories(territory) {
     console.log('Combined Path: ');
     console.log(adjTerritorySegements);
 
-    for(var y = 0; y < adjTerritorySegements.length; y += 1) {
-        combinedPath += adjTerritorySegements[y][1] 
-                     + ' ' + adjTerritorySegements[y][2] 
-                     + 'L';
+    for (var y = 0; y < adjTerritorySegements.length; y += 1) {
+        combinedPath += adjTerritorySegements[y][1] + ' ' + adjTerritorySegements[y][2] + 'L';
     }
 
     combinedPath = combinedPath.substr(0, combinedPath.lastIndexOf('L'));
@@ -220,6 +203,14 @@ var territories = {},
     },
     canvas = Raphael(document.getElementById('map'), 800, 800),
     numCells = 42,
+    territoryIndex,
+    territory,
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
+
+for (territoryIndex = 0; territoryIndex < territories.length; territoryIndex += 1) {
+    territory = territories[territoryIndex];
+
+    territory.adjTerritories = getAdjacentTerritories(territories, territory);
+}
