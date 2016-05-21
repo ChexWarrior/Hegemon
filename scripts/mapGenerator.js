@@ -22,15 +22,18 @@ function initialize(bbox, canvas, numCells) {
         cells = [],
         sites = [],
         territories = {},
-        startX,
-        startY,
-        endX,
-        endY,
-        pathStr,
+        startPointX,
+        startPointY,
+        endPointX,
+        endPointY,
+        cellPathStr,
         cellPath,
-        currentCell;
+        cell,
+        cellIndex,
+        edgeIndex,
+        cellEdges;
 
-    for (var i = 0; i < numCells; i += 1) {
+    for (cellIndex = 0; cellIndex < numCells; cellIndex += 1) {
         sites.push({
             x: ranNum(0, 800),
             y: ranNum(0, 800)
@@ -41,19 +44,20 @@ function initialize(bbox, canvas, numCells) {
     console.log(voronoi);
     cells = voronoi.cells;
 
-    for (var i = 0; i < cells.length; i += 1) {
-        currentCell = cells[i];
-        pathStr = '';
-        for (var x = 0; x < currentCell.halfedges.length; x += 1) {
-            startX = currentCell.halfedges[x].getStartpoint().x;
-            startY = currentCell.halfedges[x].getStartpoint().y;
-            endX = currentCell.halfedges[x].getEndpoint().x;
-            endY = currentCell.halfedges[x].getEndpoint().y;
-
-            pathStr += ((x === 0) ? "M" : "L") + startX + "," + startY + "L" + endX + "," + endY;
+    for (cellIndex = 0; cellIndex < cells.length; cellIndex += 1) {
+        cell = cells[cellIndex];
+        cellPath = '';
+        for (edgeIndex = 0; edgeIndex < cell.halfedges.length; edgeIndex += 1) {
+            startPointX = cell.halfedges[edgeIndex].getStartpoint().edgeIndex;
+            startPointY = cell.halfedges[edgeIndex].getStartpoint().y;
+            endPointX = cell.halfedges[edgeIndex].getEndpoint().edgeIndex;
+            endPointY = cell.halfedges[edgeIndex].getEndpoint().y;
+            //build path string
+            cellPathStr += (edgeIndex === 0 ? "M" : "L") 
+                            + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
 
-        cellPath = canvas.path(pathStr);
+        cellPath = canvas.path(cellPathStr);
 
         cellPath.attr({
             stroke: "#000000",
@@ -78,7 +82,7 @@ function initialize(bbox, canvas, numCells) {
         //add territories to map by voronoi ID
         territories[currentCell.site.voronoiId] = {
             id: currentCell.site.voronoiId,
-            pathStr: pathStr,
+            cellPathStr: cellPathStr,
             path: cellPath,
             cell: currentCell
         };
