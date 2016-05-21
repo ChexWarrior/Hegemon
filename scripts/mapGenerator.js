@@ -56,6 +56,11 @@ function initialize(bbox, canvas, numCells) {
             cellPathStr += (edgeIndex === 0 ? "M" : "L") 
                             + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
+
+        territories[cellIndex] = {
+            voronoiId: cell.site.voronoiId,
+            edges: cell.halfedges
+        };
     }
 
     return territories;
