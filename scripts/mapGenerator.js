@@ -66,6 +66,7 @@ function initialize(bbox, canvas, numCells) {
     return territories;
 }
 
+//TODO: Refactor
 function getAdjacentTerritories(territories, territory) {
     var edges = territory.cell.halfedges,
         path,
@@ -108,6 +109,7 @@ function getAdjacentTerritories(territories, territory) {
     return adjPaths;
 }
 
+//TODO: Refactor
 function getCenter(territory) {
     //Find approx center
     //http://stackoverflow.com/questions/1691928/put-label-in-the-center-of-an-svg-path
@@ -129,6 +131,7 @@ function getCenter(territory) {
     ];
 }
 
+//TODO: Refactor
 function getAreaOfTerritory(territory) {
     // Area of Polygon: www.mathopenref.com/coordpolygonarea2.html
     var area = 0,
@@ -146,6 +149,7 @@ function getAreaOfTerritory(territory) {
     return Math.abs(area / 2);
 }
 
+//TODO: Refactor
 function combineTerritories(territory) {
     //grab first adj territory
     var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
