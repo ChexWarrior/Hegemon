@@ -56,25 +56,6 @@ function initialize(bbox, canvas, numCells) {
             cellPathStr += (edgeIndex === 0 ? "M" : "L") 
                             + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
-
-        //add territories to map by voronoi ID
-        territories[currentCell.site.voronoiId] = {
-            id: currentCell.site.voronoiId,
-            cellPathStr: cellPathStr,
-            path: cellPath,
-            cell: currentCell
-        };
-
-        territories[currentCell.site.voronoiId].area = getAreaOfTerritory(
-            territories[currentCell.site.voronoiId]);
-
-        territories[currentCell.site.voronoiId].center = getCenter(
-            territories[currentCell.site.voronoiId]);
-
-        canvas.circle(territories[currentCell.site.voronoiId].center[0],
-            territories[currentCell.site.voronoiId].center[1], 2).attr({
-            fill: '#274BBE'
-        });
     }
 
     return territories;
