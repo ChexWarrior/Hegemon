@@ -152,19 +152,6 @@ function combineTerritories(territory) {
         spliceIndex,
         combinedPath = 'M ';
 
-
-    console.log('Adj Territory Segement: ');
-    console.log(adjTerritorySegements);
-
-    console.log('Target Territory Segement: ');
-    console.log(pathSegements);
-
-    console.log('Adj Line Start: ');
-    console.log(adjLineStart);
-
-    console.log('Adj Line End: ');
-    console.log(adjLineEnd);
-
     for(var x = 0; x < adjTerritorySegements.length; x += 1) {
         currentX = adjTerritorySegements[x][1];1
         currentY = adjTerritorySegements[x][2];
@@ -175,6 +162,7 @@ function combineTerritories(territory) {
             break;
         } 
     }
+
     var deleteIndex = [];
     //remove the shared line from the smaller territorys path
     for(var z = 0; z < pathSegements.length; z += 1) {
@@ -192,7 +180,6 @@ function combineTerritories(territory) {
 
     pathSegements.splice(deleteIndex[0], 1);
     pathSegements.splice(deleteIndex[1], 1);
-
 
     adjTerritorySegements.splice.apply(adjTerritorySegements, [spliceIndex, 0].concat(pathSegements));
 
@@ -227,5 +214,3 @@ var territories = {},
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
-
-console.log(territories);
