@@ -41,7 +41,7 @@ function initialize(bbox, canvas, numCells) {
     }
 
     voronoi = new Voronoi().compute(sites, bbox);
-    console.log(voronoi);
+    console.log('Computed Voronoi: ', voronoi);
     cells = voronoi.cells;
 
     for (cellIndex = 0; cellIndex < cells.length; cellIndex += 1) {
@@ -67,6 +67,7 @@ function getAdjacentTerritories(territories, territory) {
         adjPathObj,
         adjPaths = [],
         adjIds = [];
+
     //get the ids
     for (var i = 0; i < edges.length; i += 1) {
         adjPathObj = {};
