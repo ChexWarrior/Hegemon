@@ -24,7 +24,9 @@ function initialize(bbox, canvas, numCells) {
     var voronoi = null,
         cells = [],
         sites = [],
-        territories = {},
+        territories = {
+            length: 0
+        },
         startPointX,
         startPointY,
         endPointX,
