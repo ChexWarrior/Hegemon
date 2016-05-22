@@ -3,6 +3,9 @@
 /**
  * Checklist
  * =========
+ * Refactoring in progress, draw shapes next...
+ *
+ *
  * 1) Generate territories (done)
  * 2) Distinguish territories (done)
  * 3) Get territories adjacent to another territory (done)
