@@ -66,6 +66,8 @@ function initialize(bbox, canvas, numCells) {
             edges: cell.halfedges,
             path: cellPath
         };
+
+        territories.length += 1;
     }
 
     return territories;
@@ -80,7 +82,6 @@ function getAdjacentTerritories(territories, territory) {
         adjIds = [];
 
     for (edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
-        adjPathObj = {};
         //voronoi cell to left of current edge
         edgeLSite = edges[edgeIndex].edge.lSite;
         //voronoi cell to right of current edge
@@ -217,6 +218,6 @@ var territories = initialize(bbox, canvas, numCells);
 
 for (territoryIndex = 0; territoryIndex < territories.length; territoryIndex += 1) {
     territory = territories[territoryIndex];
-
     territory.adjTerritories = getAdjacentTerritories(territories, territory);
+    console.log('Territory[' + territoryIndex + ']', territory.adjTerritories);
 }
