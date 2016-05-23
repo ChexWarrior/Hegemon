@@ -137,19 +137,21 @@ function getCenter(territory) {
     ];
 }
 
-//TODO: Refactor
 function getAreaOfTerritory(territory) {
     // Area of Polygon: www.mathopenref.com/coordpolygonarea2.html
     var area = 0,
-        xyNext,
-        xy,
-        edges = territory.cell.halfedges;
+        nextPoint,
+        point,
+        edges = territory.edges,
+        edgeIndex;
 
-    for (var i = 0; i < edges.length; i += 1) {
-        xy = edges[i].getStartpoint();
-        xyNext = (edges[i + 1]) ? edges[i + 1].getStartpoint() : edges[0].getStartpoint();
+    for (edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
+        point = edges[edgeIndex].getStartpoint();
+        nextPoint = (edges[edgeIndex + 1]) 
+                    ? edges[edgeIndex + 1].getStartpoint() 
+                    : edges[0].getStartpoint();
 
-        area += xy.x * xyNext.y - xy.y * xyNext.x
+        area += point.x * nextPoint.y - point.y * nextPoint.x
     }
 
     return Math.abs(area / 2);
@@ -235,7 +237,9 @@ var territories = initialize(bbox, canvas, numCells);
 for (territoryIndex = 0; territoryIndex < territories.length; territoryIndex += 1) {
     territory = territories[territoryIndex];
     territory.adjTerritories = getAdjacentTerritories(territories, territory);
-    //console.log('Territory[' + territoryIndex + ']', territory.adjTerritories);
+    //console.log('Territory[' + territoryIndex + '].adjTerritories: ', territory.adjTerritories);
+    territory.area = getAreaOfTerritory(territory);
+    //console.log('Territory[' + territoryIndex + '].area: ', territory.area);
 }
 
 drawTerritories(territories, canvas);
