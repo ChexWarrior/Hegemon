@@ -64,7 +64,7 @@ function initialize(bbox, canvas, numCells) {
         territories[cell.site.voronoiId] = {
             voronoiId: cell.site.voronoiId,
             edges: cell.halfedges,
-            path: cellPath
+            pathStr: cellPathStr
         };
 
         territories.length += 1;
