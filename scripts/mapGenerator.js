@@ -73,6 +73,22 @@ function initialize(bbox, canvas, numCells) {
     return territories;
 }
 
+function drawTerritories(territories, canvas) {
+    var prop,
+        territory;
+
+    for(prop in territories) {
+        if(territories.hasOwnProperty(prop) && prop !== 'length') {
+            territory = territories[prop];
+            territory.path = canvas.path(territory.pathStr);
+            territory.path.attr({
+                fill: '#AF623B',
+                stroke: '#000'
+            });
+        }
+    }
+}
+
 //TODO: Refactor
 function getAdjacentTerritories(territories, territory) {
     var edges = territory.edges,
@@ -219,5 +235,7 @@ var territories = initialize(bbox, canvas, numCells);
 for (territoryIndex = 0; territoryIndex < territories.length; territoryIndex += 1) {
     territory = territories[territoryIndex];
     territory.adjTerritories = getAdjacentTerritories(territories, territory);
-    console.log('Territory[' + territoryIndex + ']', territory.adjTerritories);
+    //console.log('Territory[' + territoryIndex + ']', territory.adjTerritories);
 }
+
+drawTerritories(territories, canvas);
