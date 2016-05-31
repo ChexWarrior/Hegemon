@@ -78,8 +78,8 @@ function drawTerritories(territories, canvas) {
     var prop,
         territory;
 
-    for(prop in territories) {
-        if(territories.hasOwnProperty(prop) && prop !== 'length') {
+    for (prop in territories) {
+        if (territories.hasOwnProperty(prop) && prop !== 'length') {
             territory = territories[prop];
             territory.path = canvas.path(territory.pathStr);
             territory.path.attr({
