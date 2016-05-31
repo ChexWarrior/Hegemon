@@ -120,22 +120,22 @@ function getAdjacentTerritories(territories, territory) {
 function getCenter(territory) {
     //Find approx center
     //http://stackoverflow.com/questions/1691928/put-label-in-the-center-of-an-svg-path
-    var pathLength = territory.path.getTotalLength(),
+    var pathLength = Raphael.getTotalLength(territory.pathStr),
         step = pathLength / 100,
         point,
         xAvg = 0,
         yAvg = 0;
 
     for (var dist = 0; dist < pathLength; dist += step) {
-        point = territory.path.getPointAtLength(dist);
+        point = Raphael.getPointAtLength(territory.pathStr, dist);
         xAvg += point.x;
         yAvg += point.y;
     }
 
-    return [
-        xAvg / 100,
-        yAvg / 100
-    ];
+    return {
+        x: xAvg / 100,
+        y: yAvg / 100
+    };
 }
 
 function getAreaOfTerritory(territory) {
