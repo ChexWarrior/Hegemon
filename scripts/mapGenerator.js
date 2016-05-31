@@ -51,7 +51,7 @@ function initialize(bbox, canvas, numCells) {
 
     for (cellIndex = 0; cellIndex < cells.length; cellIndex += 1) {
         cell = cells[cellIndex];
-        cellPath = '';
+        cellPathStr = '';
         for (edgeIndex = 0; edgeIndex < cell.halfedges.length; edgeIndex += 1) {
             startPointX = cell.halfedges[edgeIndex].getStartpoint().x;
             startPointY = cell.halfedges[edgeIndex].getStartpoint().y;
