@@ -235,12 +235,17 @@ var territories = {},
 
 var territories = initialize(bbox, canvas, numCells);
 
-for (territoryIndex = 0; territoryIndex < territories.length; territoryIndex += 1) {
-    territory = territories[territoryIndex];
-    territory.adjTerritories = getAdjacentTerritories(territories, territory);
-    //console.log('Territory[' + territoryIndex + '].adjTerritories: ', territory.adjTerritories);
-    territory.area = getAreaOfTerritory(territory);
-    //console.log('Territory[' + territoryIndex + '].area: ', territory.area);
+for (prop in territories) {
+    if (territories.hasOwnProperty(prop) && prop !== 'length') {
+        territory = territories[prop];
+        console.log('Territory ' + territory.voronoiId);
+        territory.adjTerritories = getAdjacentTerritories(territories, territory);
+        console.log('Adj Territories: ', territory.adjTerritories);
+        territory.area = getAreaOfTerritory(territory);
+        console.log('Area: ', territory.area);
+        territory.centerPoint = getCenter(territory);
+        console.log('Center Point: ', territory.centerPoint);
+    }
 }
 
 drawTerritories(territories, canvas);
