@@ -58,7 +58,8 @@ function initialize(bbox, canvas, numCells) {
             endPointX = cell.halfedges[edgeIndex].getEndpoint().x;
             endPointY = cell.halfedges[edgeIndex].getEndpoint().y;
             //build path string
-            cellPathStr += (edgeIndex === 0 ? "M" : "L") + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
+            cellPathStr += (edgeIndex === 0 ? "M" : "L") 
+                        + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
 
         territories[cell.site.voronoiId] = {
