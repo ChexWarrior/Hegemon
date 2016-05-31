@@ -231,6 +231,7 @@ var territories = {},
     numCells = 42,
     territoryIndex,
     territory,
+    prop,
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
