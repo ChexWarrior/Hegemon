@@ -58,8 +58,7 @@ function initialize(bbox, canvas, numCells) {
             endPointX = cell.halfedges[edgeIndex].getEndpoint().x;
             endPointY = cell.halfedges[edgeIndex].getEndpoint().y;
             //build path string
-            cellPathStr += (edgeIndex === 0 ? "M" : "L") 
-                        + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
+            cellPathStr += (edgeIndex === 0 ? "M" : "L") + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
         }
 
         territories[cell.site.voronoiId] = {
@@ -74,23 +73,23 @@ function initialize(bbox, canvas, numCells) {
     return territories;
 }
 
-function drawTerritories(territories, canvas) {
-    var prop,
-        territory;
+function drawTerritory(territory, canvas) {
+    var pathObj = territory.path = canvas.path(territory.pathStr);
+    pathObj.attr({
+        fill: '#AF623B',
+        stroke: '#000'
+    });
 
-    for (prop in territories) {
-        if (territories.hasOwnProperty(prop) && prop !== 'length') {
-            territory = territories[prop];
-            territory.path = canvas.path(territory.pathStr);
-            territory.path.attr({
-                fill: '#AF623B',
-                stroke: '#000'
-            });
-        }
-    }
+    return pathObj;
 }
 
-//TODO: Refactor
+function drawTerritoryCenter(territory, canvas) {
+    canvas.circle(territory.centerPoint.x, territory.centerPoint.y, 3).attr({
+        fill: '#2862C1',
+        stroke: '#000'
+    });
+}
+
 function getAdjacentTerritories(territories, territory) {
     var edges = territory.edges,
         edgeLSite,
@@ -116,7 +115,6 @@ function getAdjacentTerritories(territories, territory) {
     return adjIds;
 }
 
-//TODO: Refactor
 function getCenter(territory) {
     //Find approx center
     //http://stackoverflow.com/questions/1691928/put-label-in-the-center-of-an-svg-path
@@ -148,9 +146,7 @@ function getAreaOfTerritory(territory) {
 
     for (edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
         point = edges[edgeIndex].getStartpoint();
-        nextPoint = (edges[edgeIndex + 1]) 
-                    ? edges[edgeIndex + 1].getStartpoint() 
-                    : edges[0].getStartpoint();
+        nextPoint = (edges[edgeIndex + 1]) ? edges[edgeIndex + 1].getStartpoint() : edges[0].getStartpoint();
 
         area += point.x * nextPoint.y - point.y * nextPoint.x
     }
@@ -246,7 +242,8 @@ for (prop in territories) {
         console.log('Area: ', territory.area);
         territory.centerPoint = getCenter(territory);
         console.log('Center Point: ', territory.centerPoint);
+
+        drawTerritory(territory, canvas);
+        drawTerritoryCenter(territory, canvas);
     }
 }
-
-drawTerritories(territories, canvas);
