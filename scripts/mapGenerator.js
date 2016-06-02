@@ -228,6 +228,7 @@ var territories = {},
     territoryIndex,
     territory,
     prop,
+    territoryIdsToCombine = [],
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
@@ -240,10 +241,17 @@ for (prop in territories) {
         console.log('Adj Territories: ', territory.adjTerritories);
         territory.area = getAreaOfTerritory(territory);
         console.log('Area: ', territory.area);
+        
+        if(territory.area <= MIN_AREA) {
+            territoryIdsToCombine.push(territory.voronoiId);
+        }
+
         territory.centerPoint = getCenter(territory);
         console.log('Center Point: ', territory.centerPoint);
-
-        drawTerritory(territory, canvas);
+        territory.path = drawTerritory(territory, canvas);
+        console.log('Path: ', territory.path);
         drawTerritoryCenter(territory, canvas);
     }
 }
+
+console.log('Territory Ids to Combine: ', territoryIdsToCombine);
