@@ -156,6 +156,13 @@ function getAreaOfTerritory(territory) {
 
 //TODO: Refactor
 function combineTerritories(territory) {
+    // Refactor:
+    // 1) Find all territories eligble for combination
+    // 2) Find out if any of these territories are adjacent
+    // 3) Choose adj territory to combine small ones into
+    // 4) Adj small territories should not pick the same territory (or each other)
+    // 5) Add paths, remove shared side
+
     //grab first adj territory
     var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
         adjLineStart = territory.adjTerritories[0].adjSide[0],
