@@ -52,13 +52,18 @@ function initialize(bbox, canvas, numCells) {
     for (cellIndex = 0; cellIndex < cells.length; cellIndex += 1) {
         cell = cells[cellIndex];
         cellPathStr = '';
-        for (edgeIndex = 0; edgeIndex < cell.halfedges.length; edgeIndex += 1) {
+        for (edgeIndex = 0; edgeIndex < cell.halfedges.length - 1; edgeIndex += 1) {
             startPointX = cell.halfedges[edgeIndex].getStartpoint().x;
             startPointY = cell.halfedges[edgeIndex].getStartpoint().y;
             endPointX = cell.halfedges[edgeIndex].getEndpoint().x;
             endPointY = cell.halfedges[edgeIndex].getEndpoint().y;
             //build path string
-            cellPathStr += (edgeIndex === 0 ? "M" : "L") + startPointX + "," + startPointY + "L" + endPointX + "," + endPointY;
+            if(edgeIndex === 0) {
+                cellPathStr += 'M' + startPointX + ' ' + startPointY 
+                            + 'L' + endPointX + ' ' + endPointY;
+            } else {
+                cellPathStr += 'L' + endPointX + ' ' + endPointY;
+            }
         }
 
         territories[cell.site.voronoiId] = {
