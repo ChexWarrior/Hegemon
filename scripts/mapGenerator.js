@@ -107,7 +107,6 @@ function getAdjacentTerritories(territories, territory) {
         edgeLSite = edges[edgeIndex].edge.lSite;
         //voronoi cell to right of current edge
         edgeRSite = edges[edgeIndex].edge.rSite;
-
         //check each side of edge and store the id of cell that isn't the parent
         //of this edge
         if (edgeLSite && edgeLSite.voronoiId !== territory.voronoiId) {
@@ -160,7 +159,7 @@ function getAreaOfTerritory(territory) {
 }
 
 //TODO: Refactor
-function combineTerritory(territory) {
+function combineTerritory(territories, territoryIdToCombine) {
     // Refactor
     // 1) Choose adj territory
     // 2) Merge two paths
@@ -168,7 +167,49 @@ function combineTerritory(territory) {
     // 4) Add attr to former territory to ensure any requests are rerouted to new one
     // 5) Check if new territory is large enough, if not add to combo ids
 
-    
+    var territoryToCombine = territories[territoryIdToCombine],
+        //grab first adj territory
+        adjTerritory = territories[territoryToCombine.adjTerritories[0]],
+        adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
+        territoryToCominePathSegments = Raphael.parsePathString(territoryToCombine.pathStr),
+        outerIndex,
+        innerIndex,
+        outerX,
+        outerY,
+        innerX,
+        innerY,
+        found = 0;
+
+    territoryToCombine.path.attr({
+        fill: 'pink'
+    });
+
+    adjTerritory.path.attr({
+        fill: 'green'
+    });
+
+    for(outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
+        outerX = adjTerritoryPathSegments[outerIndex][1];
+        outerY = adjTerritoryPathSegments[outerIndex][2];
+        //console.log('Outer Point: ' + outerX + ',' + outerY)
+        for(innerIndex = 0; innerIndex < territoryToCominePathSegments.length; innerIndex += 1) {
+            innerX = territoryToCominePathSegments[innerIndex][1];
+            innerY = territoryToCominePathSegments[innerIndex][2];
+
+            //console.log('Inner Point: ' + innerX + ',' + innerY)
+            if(innerX === outerX && innerY === outerY) {
+                console.log('Found shared segement!');
+                found += 1;
+            }
+        }
+    }
+
+    if(found == 2) {
+        console.log('Adj points found!')
+    } else {
+        console.log('Adj points not found!');
+    }
+
 
     //grab first adj territory
     // var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
@@ -272,5 +313,5 @@ for (prop in territories) {
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 
 for(index = 0; index < territoryIdsToCombine.length; index += 1) {
-    combineTerritory(territories[territoryIdsToCombine[index]]);
+    combineTerritory(territories, territoryIdsToCombine[index]);
 }
