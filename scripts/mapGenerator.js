@@ -155,71 +155,73 @@ function getAreaOfTerritory(territory) {
 }
 
 //TODO: Refactor
-function combineTerritories(territory) {
-    // Refactor:
-    // 1) Find all territories eligble for combination
-    // 2) Find out if any of these territories are adjacent
-    // 3) Choose adj territory to combine small ones into
-    // 4) Adj small territories should not pick the same territory (or each other)
-    // 5) Add paths, remove shared side
+function combineTerritory(territory) {
+    // Refactor
+    // 1) Choose adj territory
+    // 2) Merge two paths
+    // 3) Add two former territories adj paths to new ones, removing the two former territories.
+    // 4) Add attr to former territory to ensure any requests are rerouted to new one
+    // 5) Check if new territory is large enough, if not add to combo ids
+
+    
 
     //grab first adj territory
-    var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
-        adjLineStart = territory.adjTerritories[0].adjSide[0],
-        adjLineEnd = territory.adjTerritories[0].adjSide[1],
-        //split path into segements
-        pathSegements = Raphael.parsePathString(territory.pathStr),
-        currentX,
-        currentY,
-        spliceIndex,
-        combinedPath = 'M ';
+    // var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
+    //     adjLineStart = territory.adjTerritories[0].adjSide[0],
+    //     adjLineEnd = territory.adjTerritories[0].adjSide[1],
+    //     //split path into segements
+    //     pathSegements = Raphael.parsePathString(territory.pathStr),
+    //     currentX,
+    //     currentY,
+    //     spliceIndex,
+    //     combinedPath = 'M ';
 
-    for (var x = 0; x < adjTerritorySegements.length; x += 1) {
-        currentX = adjTerritorySegements[x][1];
-        1
-        currentY = adjTerritorySegements[x][2];
+    // for (var x = 0; x < adjTerritorySegements.length; x += 1) {
+    //     currentX = adjTerritorySegements[x][1];
+    //     1
+    //     currentY = adjTerritorySegements[x][2];
 
-        //if we've arrived at the shared line segement of the two paths...
-        if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
-            spliceIndex = x;
-            break;
-        }
-    }
+    //     //if we've arrived at the shared line segement of the two paths...
+    //     if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
+    //         spliceIndex = x;
+    //         break;
+    //     }
+    // }
 
-    var deleteIndex = [];
-    //remove the shared line from the smaller territorys path
-    for (var z = 0; z < pathSegements.length; z += 1) {
-        currentX = pathSegements[z][1];
-        currentY = pathSegements[z][2];
+    // var deleteIndex = [];
+    // //remove the shared line from the smaller territorys path
+    // for (var z = 0; z < pathSegements.length; z += 1) {
+    //     currentX = pathSegements[z][1];
+    //     currentY = pathSegements[z][2];
 
-        //if we've arrived at the shared line segement of the two paths...
-        if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
+    //     //if we've arrived at the shared line segement of the two paths...
+    //     if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
 
-            deleteIndex.push(z);
-        } else if (currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
-            deleteIndex.push(z);
-        }
-    }
+    //         deleteIndex.push(z);
+    //     } else if (currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
+    //         deleteIndex.push(z);
+    //     }
+    // }
 
-    pathSegements.splice(deleteIndex[0], 1);
-    pathSegements.splice(deleteIndex[1], 1);
+    // pathSegements.splice(deleteIndex[0], 1);
+    // pathSegements.splice(deleteIndex[1], 1);
 
-    adjTerritorySegements.splice.apply(adjTerritorySegements, [spliceIndex, 0].concat(pathSegements));
+    // adjTerritorySegements.splice.apply(adjTerritorySegements, [spliceIndex, 0].concat(pathSegements));
 
-    console.log('Combined Path: ');
-    console.log(adjTerritorySegements);
+    // console.log('Combined Path: ');
+    // console.log(adjTerritorySegements);
 
-    for (var y = 0; y < adjTerritorySegements.length; y += 1) {
-        combinedPath += adjTerritorySegements[y][1] + ' ' + adjTerritorySegements[y][2] + 'L';
-    }
+    // for (var y = 0; y < adjTerritorySegements.length; y += 1) {
+    //     combinedPath += adjTerritorySegements[y][1] + ' ' + adjTerritorySegements[y][2] + 'L';
+    // }
 
-    combinedPath = combinedPath.substr(0, combinedPath.lastIndexOf('L'));
+    // combinedPath = combinedPath.substr(0, combinedPath.lastIndexOf('L'));
 
-    console.log(combinedPath);
+    // console.log(combinedPath);
 
-    canvas.path(combinedPath).attr({
-        stroke: 'blue'
-    });
+    // canvas.path(combinedPath).attr({
+    //     stroke: 'blue'
+    // });
 }
 
 //start app
@@ -234,6 +236,7 @@ var territories = {},
     numCells = 42,
     territoryIndex,
     territory,
+    index,
     prop,
     territoryIdsToCombine = [],
     MIN_AREA = 4000;
@@ -262,3 +265,7 @@ for (prop in territories) {
 }
 
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
+
+for(index = 0; index < territoryIdsToCombine.length; index += 1) {
+    combineTerritory(territories[territoryIdsToCombine[index]]);
+}
