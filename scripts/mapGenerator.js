@@ -58,9 +58,8 @@ function initialize(bbox, canvas, numCells) {
             endPointX = cell.halfedges[edgeIndex].getEndpoint().x;
             endPointY = cell.halfedges[edgeIndex].getEndpoint().y;
             //build path string
-            if(edgeIndex === 0) {
-                cellPathStr += 'M' + startPointX + ' ' + startPointY 
-                            + 'L' + endPointX + ' ' + endPointY;
+            if (edgeIndex === 0) {
+                cellPathStr += 'M' + startPointX + ' ' + startPointY + 'L' + endPointX + ' ' + endPointY;
             } else {
                 cellPathStr += 'L' + endPointX + ' ' + endPointY;
             }
@@ -159,7 +158,7 @@ function getAreaOfTerritory(territory) {
 }
 
 //TODO: Refactor
-function combineTerritory(territories, territoryIdToCombine) {
+function combineTerritory(territories, territoryIdToCombine, canvas) {
     // Refactor
     // 1) Choose adj territory
     // 2) Merge two paths
@@ -172,13 +171,19 @@ function combineTerritory(territories, territoryIdToCombine) {
         adjTerritory = territories[territoryToCombine.adjTerritories[0]],
         adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         territoryToCominePathSegments = Raphael.parsePathString(territoryToCombine.pathStr),
+        newPathSegments = [],
+        newPathStr = '',
         outerIndex,
         innerIndex,
+        index,
         outerX,
         outerY,
         innerX,
         innerY,
-        found = 0;
+        sharedSegmentIndex = [],
+        found = 0,
+        firstPointFound = false,
+        secondPointFound = false;
 
     territoryToCombine.path.attr({
         fill: 'pink'
@@ -188,27 +193,63 @@ function combineTerritory(territories, territoryIdToCombine) {
         fill: 'green'
     });
 
-    for(outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
+    for (outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
         outerX = adjTerritoryPathSegments[outerIndex][1];
         outerY = adjTerritoryPathSegments[outerIndex][2];
+        newPathSegments = adjTerritoryPathSegments;
         //console.log('Outer Point: ' + outerX + ',' + outerY)
-        for(innerIndex = 0; innerIndex < territoryToCominePathSegments.length; innerIndex += 1) {
+        for (innerIndex = 0; innerIndex < territoryToCominePathSegments.length; innerIndex += 1) {
             innerX = territoryToCominePathSegments[innerIndex][1];
             innerY = territoryToCominePathSegments[innerIndex][2];
 
             //console.log('Inner Point: ' + innerX + ',' + innerY)
-            if(innerX === outerX && innerY === outerY) {
+            //if a shared point
+            if (innerX === outerX && innerY === outerY) {
+                //at shared point add in the path removing the shared segement
                 console.log('Found shared segement!');
-                found += 1;
+
+                if (firstPointFound && !secondPointFound) {
+                    secondPointFound = true;
+                }
+
+                if (!firstPointFound) {
+                    firstPointFound = true;
+                }
             }
+
+            //indicates we found first shared segment
+            //start adding inner path to outer
+            if (firstPointFound && !secondPointFound) {
+                newPathSegments.push(territoryToCominePathSegments[innerIndex]);
+            }
+
+            // if (found === 2) {
+            //     newPathSegments = newPathSegments.slice(0, newPathSegments.length - 1);
+            // }
         }
     }
 
-    if(found == 2) {
-        console.log('Adj points found!')
-    } else {
-        console.log('Adj points not found!');
+    console.log('Combined Path Segments', newPathSegments);
+
+    for (var index = 0; index < newPathSegments.length; index += 1) {
+        // if(index === 0) {
+        newPathStr += newPathSegments[index][0] + newPathSegments[index][1].toString() + ' ' + newPathSegments[index][2].toString();
+        // } else {
+        //     newPathStr += 'M' + newPathSegments[1] + ' ' + newPathSegments[2];
+        // }
     }
+
+    canvas.path(newPathStr).attr({
+        fill: 'blue'
+    });
+
+    // if(found === 2) {
+    //     console.log('Adj points found!')
+    // } else {
+    //     console.log('Adj points not found!');
+    // }
+
+
 
 
     //grab first adj territory
@@ -297,8 +338,8 @@ for (prop in territories) {
         console.log('Adj Territories: ', territory.adjTerritories);
         territory.area = getAreaOfTerritory(territory);
         console.log('Area: ', territory.area);
-        
-        if(territory.area <= MIN_AREA) {
+
+        if (territory.area <= MIN_AREA) {
             territoryIdsToCombine.push(territory.voronoiId);
         }
 
@@ -312,6 +353,6 @@ for (prop in territories) {
 
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 
-for(index = 0; index < territoryIdsToCombine.length; index += 1) {
-    combineTerritory(territories, territoryIdsToCombine[index]);
+for (index = 0; index < territoryIdsToCombine.length; index += 1) {
+    combineTerritory(territories, territoryIdsToCombine[index], canvas);
 }
