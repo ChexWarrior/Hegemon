@@ -202,6 +202,9 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
             innerX = territoryToCominePathSegments[innerIndex][1];
             innerY = territoryToCominePathSegments[innerIndex][2];
 
+            //TODO: Redo this algorithm, add paths along shared line and simply remove
+            // the shared line!
+            
             //console.log('Inner Point: ' + innerX + ',' + innerY)
             //if a shared point
             if (innerX === outerX && innerY === outerY) {
