@@ -46,7 +46,7 @@ function initialize(bbox, canvas, numCells) {
     }
 
     voronoi = new Voronoi().compute(sites, bbox);
-    console.log('Computed Voronoi: ', voronoi);
+    //console.log('Computed Voronoi: ', voronoi);
     cells = voronoi.cells;
 
     for (cellIndex = 0; cellIndex < cells.length; cellIndex += 1) {
@@ -157,6 +157,16 @@ function getAreaOfTerritory(territory) {
     return Math.abs(area / 2);
 }
 
+function isSharedPoint(x, y, sharedPoints) {
+    for (var index = 0; index < sharedPoints.length; index += 1) {
+        if (x === sharedPoints[index].x && y === sharedPoints[index].y) {
+            return sharedPoints[index];
+        }
+    }
+
+    return false;
+}
+
 //TODO: Refactor
 function combineTerritory(territories, territoryIdToCombine, canvas) {
     // Refactor
@@ -166,152 +176,189 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     // 4) Add attr to former territory to ensure any requests are rerouted to new one
     // 5) Check if new territory is large enough, if not add to combo ids
 
-    var territoryToCombine = territories[territoryIdToCombine],
-        //grab first adj territory
-        adjTerritory = territories[territoryToCombine.adjTerritories[0]],
-        adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
-        territoryToCominePathSegments = Raphael.parsePathString(territoryToCombine.pathStr),
-        newPathSegments = [],
+    //the combo territory is the territory that will be put into another
+    var comboTerritory = territories[territoryIdToCombine],
+        //the adj territory is the territory that the combo territory is being combined into
+        baseTerritory = territories[comboTerritory.adjTerritories[0]],
+        baseTerritoryPathSegments = Raphael.parsePathString(baseTerritory.pathStr),
+        comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
+        newPathSegmentsFromBase = [],
+        newPathSegmentsFromCombo = [],
         newPathStr = '',
         outerIndex,
         innerIndex,
         index,
+        nextIndex,
+        lastIndex,
         outerX,
         outerY,
         innerX,
         innerY,
-        sharedSegmentIndex = [],
+        currentX,
+        currentY,
+        lastX,
+        lastY,
+        nextX,
+        nextY,
+        sharedPoint = {},
+        sharedPoints = [],
         found = 0,
+        currentPoint,
         firstPointFound = false,
         secondPointFound = false;
 
-    territoryToCombine.path.attr({
+
+    comboTerritory.path.attr({
         fill: 'pink'
     });
 
-    adjTerritory.path.attr({
+    baseTerritory.path.attr({
         fill: 'green'
     });
 
-    for (outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
-        outerX = adjTerritoryPathSegments[outerIndex][1];
-        outerY = adjTerritoryPathSegments[outerIndex][2];
-        newPathSegments = adjTerritoryPathSegments;
+    for (outerIndex = 0; outerIndex < baseTerritoryPathSegments.length; outerIndex += 1) {
+        outerX = baseTerritoryPathSegments[outerIndex][1];
+        outerY = baseTerritoryPathSegments[outerIndex][2];
         //console.log('Outer Point: ' + outerX + ',' + outerY)
-        for (innerIndex = 0; innerIndex < territoryToCominePathSegments.length; innerIndex += 1) {
-            innerX = territoryToCominePathSegments[innerIndex][1];
-            innerY = territoryToCominePathSegments[innerIndex][2];
+        for (innerIndex = 0; innerIndex < comboTerritoryPathSegments.length; innerIndex += 1) {
+            innerX = comboTerritoryPathSegments[innerIndex][1];
+            innerY = comboTerritoryPathSegments[innerIndex][2];
 
             //TODO: Redo this algorithm, add paths along shared line and simply remove
             // the shared line!
-            
+            // Find shared points, find lines between points and replace
+            // Find shared points not between other shared points (end point)
+            // 
+
             //console.log('Inner Point: ' + innerX + ',' + innerY)
             //if a shared point
             if (innerX === outerX && innerY === outerY) {
-                //at shared point add in the path removing the shared segement
-                console.log('Found shared segement!');
-
-                if (firstPointFound && !secondPointFound) {
-                    secondPointFound = true;
-                }
-
-                if (!firstPointFound) {
-                    firstPointFound = true;
-                }
+                console.log('Found shared point!');
+                sharedPoints.push({
+                    x: innerX,
+                    y: innerY,
+                    //index of this point within inner path segments
+                    innerIndex: innerIndex,
+                    //index of this point within outer path segments
+                    outerIndex: outerIndex,
+                    isEndPoint: false,
+                    isStartPoint: false
+                });
             }
-
-            //indicates we found first shared segment
-            //start adding inner path to outer
-            if (firstPointFound && !secondPointFound) {
-                newPathSegments.push(territoryToCominePathSegments[innerIndex]);
-            }
-
-            // if (found === 2) {
-            //     newPathSegments = newPathSegments.slice(0, newPathSegments.length - 1);
-            // }
         }
     }
 
-    console.log('Combined Path Segments', newPathSegments);
+    //store where end points are in sharedPoints array
+    var startPoint, endPoint;
 
-    for (var index = 0; index < newPathSegments.length; index += 1) {
-        // if(index === 0) {
-        newPathStr += newPathSegments[index][0] + newPathSegments[index][1].toString() + ' ' + newPathSegments[index][2].toString();
-        // } else {
-        //     newPathStr += 'M' + newPathSegments[1] + ' ' + newPathSegments[2];
-        // }
+    //find starting and ending shared points relative to base path
+    for (index = 0; index < baseTerritoryPathSegments.length; index += 1) {
+        lastIndex = (index > 0) ? index - 1 : baseTerritoryPathSegments.length - 1;
+        nextIndex = (index < baseTerritoryPathSegments.length - 1) ? index + 1 : 0;
+
+        currentX = baseTerritoryPathSegments[index][1];
+        currentY = baseTerritoryPathSegments[index][2];
+
+        nextX = baseTerritoryPathSegments[nextIndex][1];
+        nextY = baseTerritoryPathSegments[nextIndex][2];
+
+        lastX = baseTerritoryPathSegments[lastIndex][1];
+        lastY = baseTerritoryPathSegments[lastIndex][2];
+
+        if (currentPoint = isSharedPoint(currentX, currentY, sharedPoints)) {
+            var lastPointIsShared = isSharedPoint(lastX, lastY, sharedPoints);
+            var nextPointIsShared = isSharedPoint(nextX, nextY, sharedPoints);
+
+            if (!lastPointIsShared && nextPointIsShared) {
+                currentPoint.isStartPoint = true;
+                startPoint = currentPoint;
+
+            } else if (lastPointIsShared && !nextPointIsShared) {
+                currentPoint.isEndPoint = true;
+                endPoint = currentPoint;
+            }
+        }
     }
+
+    //loop through base path add all points to new path that are:
+    //Not shared or,
+    //are shared but is the start or end point
+
+    //beginning with end point, add all non shared paths to new path
+    nextIndex = (endPoint.outerIndex < baseTerritoryPathSegments.length - 1) 
+                ? endPoint.outerIndex + 1 : 0;
+    nextX = baseTerritoryPathSegments[nextIndex][1];
+    nextY = baseTerritoryPathSegments[nextIndex][2];
+    var firstLoop = true;
+    while (!isSharedPoint(nextX, nextY, sharedPoints)) {
+        if(firstLoop) {
+            newPathSegmentsFromBase.push([
+                'M',
+                baseTerritoryPathSegments[nextIndex][1],
+                baseTerritoryPathSegments[nextIndex][2]
+            ]);
+        } else {
+            newPathSegmentsFromBase.push([
+                'L',
+                baseTerritoryPathSegments[nextIndex][1],
+                baseTerritoryPathSegments[nextIndex][2]
+            ]);
+        }
+
+        firstLoop = false;
+
+        nextIndex = (nextIndex < baseTerritoryPathSegments.length - 1) 
+                    ? nextIndex + 1 : 0;
+        nextX = baseTerritoryPathSegments[nextIndex][1];
+        nextY = baseTerritoryPathSegments[nextIndex][2];
+    }
+
+    nextIndex = (startPoint.innerIndex < comboTerritoryPathSegments.length - 1) 
+                ? startPoint.innerIndex + 1 : 0;
+    nextX = comboTerritoryPathSegments[nextIndex][1];
+    nextY = comboTerritoryPathSegments[nextIndex][2];
+    while (!isSharedPoint(nextX, nextY, sharedPoints)) {
+        newPathSegmentsFromCombo.push([
+            'L',
+            comboTerritoryPathSegments[nextIndex][1],
+            comboTerritoryPathSegments[nextIndex][2]
+        ]);
+
+        nextIndex = (nextIndex.innerIndex < comboTerritoryPathSegments.length - 1) 
+                    ? nextIndex + 1 : 0;
+        nextX = comboTerritoryPathSegments[nextIndex][1];
+        nextY = comboTerritoryPathSegments[nextIndex][2];
+    }
+
+    var newPathSegments = newPathSegmentsFromBase.concat(newPathSegmentsFromCombo);
+
+    for(index = 0; index < newPathSegments.length; index += 1) {
+        newPathStr += newPathSegments[index][0] 
+                        + newPathSegments[index][1] 
+                        + ',' 
+                        + newPathSegments[index][2];
+    }
+
+    console.log('Base Territory Path Str', baseTerritory.pathStr);
+    console.log('Combo Territory Path Str', comboTerritory.pathStr);
+    console.log('New Path Str', newPathStr);
 
     canvas.path(newPathStr).attr({
         fill: 'blue'
     });
 
-    // if(found === 2) {
-    //     console.log('Adj points found!')
-    // } else {
-    //     console.log('Adj points not found!');
-    // }
+
+    //start on base path:
+    // if not shared add to new path
+    // if shared but not end point continue
+    // if shared end point then 
+    // based on combo path innerIndex of that point, add point and iterate through combo path:
+    //if next point is shared, go backwards
+    //add to new path until we get to other end point, add it and switch to base
+    //path based on outerIndex of shared point, if next point on base is shared go 
+    // other direction and add points until we hit other end point
 
 
-
-
-    //grab first adj territory
-    // var adjTerritorySegements = Raphael.parsePathString(territory.adjTerritories[0].pathStr),
-    //     adjLineStart = territory.adjTerritories[0].adjSide[0],
-    //     adjLineEnd = territory.adjTerritories[0].adjSide[1],
-    //     //split path into segements
-    //     pathSegements = Raphael.parsePathString(territory.pathStr),
-    //     currentX,
-    //     currentY,
-    //     spliceIndex,
-    //     combinedPath = 'M ';
-
-    // for (var x = 0; x < adjTerritorySegements.length; x += 1) {
-    //     currentX = adjTerritorySegements[x][1];
-    //     1
-    //     currentY = adjTerritorySegements[x][2];
-
-    //     //if we've arrived at the shared line segement of the two paths...
-    //     if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
-    //         spliceIndex = x;
-    //         break;
-    //     }
-    // }
-
-    // var deleteIndex = [];
-    // //remove the shared line from the smaller territorys path
-    // for (var z = 0; z < pathSegements.length; z += 1) {
-    //     currentX = pathSegements[z][1];
-    //     currentY = pathSegements[z][2];
-
-    //     //if we've arrived at the shared line segement of the two paths...
-    //     if (currentX == adjLineStart.x && currentY == adjLineStart.y) {
-
-    //         deleteIndex.push(z);
-    //     } else if (currentX == adjLineEnd.x && currentY == adjLineEnd.y) {
-    //         deleteIndex.push(z);
-    //     }
-    // }
-
-    // pathSegements.splice(deleteIndex[0], 1);
-    // pathSegements.splice(deleteIndex[1], 1);
-
-    // adjTerritorySegements.splice.apply(adjTerritorySegements, [spliceIndex, 0].concat(pathSegements));
-
-    // console.log('Combined Path: ');
-    // console.log(adjTerritorySegements);
-
-    // for (var y = 0; y < adjTerritorySegements.length; y += 1) {
-    //     combinedPath += adjTerritorySegements[y][1] + ' ' + adjTerritorySegements[y][2] + 'L';
-    // }
-
-    // combinedPath = combinedPath.substr(0, combinedPath.lastIndexOf('L'));
-
-    // console.log(combinedPath);
-
-    // canvas.path(combinedPath).attr({
-    //     stroke: 'blue'
-    // });
 }
 
 //start app
@@ -336,26 +383,28 @@ var territories = initialize(bbox, canvas, numCells);
 for (prop in territories) {
     if (territories.hasOwnProperty(prop) && prop !== 'length') {
         territory = territories[prop];
-        console.log('Territory ' + territory.voronoiId);
+        //console.log('Territory ' + territory.voronoiId);
         territory.adjTerritories = getAdjacentTerritories(territories, territory);
-        console.log('Adj Territories: ', territory.adjTerritories);
+        //console.log('Adj Territories: ', territory.adjTerritories);
         territory.area = getAreaOfTerritory(territory);
-        console.log('Area: ', territory.area);
+        //console.log('Area: ', territory.area);
 
         if (territory.area <= MIN_AREA) {
             territoryIdsToCombine.push(territory.voronoiId);
         }
 
         territory.centerPoint = getCenter(territory);
-        console.log('Center Point: ', territory.centerPoint);
+        //console.log('Center Point: ', territory.centerPoint);
         territory.path = drawTerritory(territory, canvas);
-        console.log('Path: ', territory.path);
+        //console.log('Path: ', territory.path);
         drawTerritoryCenter(territory, canvas);
     }
 }
 
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 
-for (index = 0; index < territoryIdsToCombine.length; index += 1) {
-    combineTerritory(territories, territoryIdsToCombine[index], canvas);
-}
+//for (index = 0; index < territoryIdsToCombine.length; index += 1) {
+    if(territoryIdsToCombine.length > 0) {
+        combineTerritory(territories, territoryIdsToCombine[0], canvas);
+    }
+//}
