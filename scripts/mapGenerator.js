@@ -289,29 +289,42 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
                 ? endPoint.outerIndex + 1 : 0;
     nextX = baseTerritoryPathSegments[nextIndex][1];
     nextY = baseTerritoryPathSegments[nextIndex][2];
-    var firstLoop = true;
+    //var firstLoop = true;
+
+    newPathSegmentsFromBase.push([
+        'M',
+         baseTerritoryPathSegments[endPoint.outerIndex][1],
+         baseTerritoryPathSegments[endPoint.outerIndex][2]
+    ]);
+
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
-        if(firstLoop) {
-            newPathSegmentsFromBase.push([
-                'M',
-                baseTerritoryPathSegments[nextIndex][1],
-                baseTerritoryPathSegments[nextIndex][2]
-            ]);
-        } else {
+        // if(firstLoop) {
+        //     newPathSegmentsFromBase.push([
+        //         'M',
+        //         baseTerritoryPathSegments[nextIndex][1],
+        //         baseTerritoryPathSegments[nextIndex][2]
+        //     ]);
+        // } else {
             newPathSegmentsFromBase.push([
                 'L',
                 baseTerritoryPathSegments[nextIndex][1],
                 baseTerritoryPathSegments[nextIndex][2]
             ]);
-        }
+//        }
 
-        firstLoop = false;
+       // firstLoop = false;
 
         nextIndex = (nextIndex < baseTerritoryPathSegments.length - 1) 
                     ? nextIndex + 1 : 0;
         nextX = baseTerritoryPathSegments[nextIndex][1];
         nextY = baseTerritoryPathSegments[nextIndex][2];
     }
+
+    newPathSegmentsFromBase.push([
+        'L',
+         baseTerritoryPathSegments[startPoint.outerIndex][1],
+         baseTerritoryPathSegments[startPoint.outerIndex][2]
+    ]);
 
     nextIndex = (startPoint.innerIndex < comboTerritoryPathSegments.length - 1) 
                 ? startPoint.innerIndex + 1 : 0;
@@ -324,7 +337,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
             comboTerritoryPathSegments[nextIndex][2]
         ]);
 
-        nextIndex = (nextIndex.innerIndex < comboTerritoryPathSegments.length - 1) 
+        nextIndex = (nextIndex < comboTerritoryPathSegments.length - 1) 
                     ? nextIndex + 1 : 0;
         nextX = comboTerritoryPathSegments[nextIndex][1];
         nextY = comboTerritoryPathSegments[nextIndex][2];
