@@ -167,14 +167,12 @@ function isSharedPoint(x, y, sharedPoints) {
     return false;
 }
 
-//TODO: Refactor
+
 function combineTerritory(territories, territoryIdToCombine, canvas) {
-    // Refactor
-    // 1) Choose adj territory
-    // 2) Merge two paths
-    // 3) Add two former territories adj paths to new ones, removing the two former territories.
-    // 4) Add attr to former territory to ensure any requests are rerouted to new one
-    // 5) Check if new territory is large enough, if not add to combo ids
+
+    //TODO: Refactor
+    //TODO: Remove base and combo territories after combination, replace with new
+    //TODO: Unit tests
 
     //the combo territory is the territory that will be put into another
     var comboTerritory = territories[territoryIdToCombine],
@@ -184,6 +182,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         newPathSegmentsFromBase = [],
         newPathSegmentsFromCombo = [],
+        newPathSegments = [],
         newPathStr = '',
         outerIndex,
         innerIndex,
@@ -202,11 +201,9 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         nextY,
         sharedPoint = {},
         sharedPoints = [],
-        found = 0,
-        currentPoint,
-        firstPointFound = false,
-        secondPointFound = false;
-
+        startPoint,
+        endPoint,
+        currentPoint;
 
     comboTerritory.path.attr({
         fill: 'pink'
@@ -223,12 +220,6 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         for (innerIndex = 0; innerIndex < comboTerritoryPathSegments.length; innerIndex += 1) {
             innerX = comboTerritoryPathSegments[innerIndex][1];
             innerY = comboTerritoryPathSegments[innerIndex][2];
-
-            //TODO: Redo this algorithm, add paths along shared line and simply remove
-            // the shared line!
-            // Find shared points, find lines between points and replace
-            // Find shared points not between other shared points (end point)
-            // 
 
             //console.log('Inner Point: ' + innerX + ',' + innerY)
             //if a shared point
@@ -247,9 +238,6 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
             }
         }
     }
-
-    //store where end points are in sharedPoints array
-    var startPoint, endPoint;
 
     //find starting and ending shared points relative to base path
     for (index = 0; index < baseTerritoryPathSegments.length; index += 1) {
@@ -280,52 +268,39 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         }
     }
 
-    //loop through base path add all points to new path that are:
-    //Not shared or,
-    //are shared but is the start or end point
-
-    //beginning with end point, add all non shared paths to new path
-    nextIndex = (endPoint.outerIndex < baseTerritoryPathSegments.length - 1) 
-                ? endPoint.outerIndex + 1 : 0;
-    nextX = baseTerritoryPathSegments[nextIndex][1];
-    nextY = baseTerritoryPathSegments[nextIndex][2];
-    //var firstLoop = true;
-
+    //add endpoint as first part of new path string
     newPathSegmentsFromBase.push([
         'M',
          baseTerritoryPathSegments[endPoint.outerIndex][1],
          baseTerritoryPathSegments[endPoint.outerIndex][2]
     ]);
 
+    //beginning with end point, add all non shared paths to new path
+    nextIndex = (endPoint.outerIndex < baseTerritoryPathSegments.length - 1) 
+                ? endPoint.outerIndex + 1 : 0;
+    nextX = baseTerritoryPathSegments[nextIndex][1];
+    nextY = baseTerritoryPathSegments[nextIndex][2];
+
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
-        // if(firstLoop) {
-        //     newPathSegmentsFromBase.push([
-        //         'M',
-        //         baseTerritoryPathSegments[nextIndex][1],
-        //         baseTerritoryPathSegments[nextIndex][2]
-        //     ]);
-        // } else {
             newPathSegmentsFromBase.push([
                 'L',
                 baseTerritoryPathSegments[nextIndex][1],
                 baseTerritoryPathSegments[nextIndex][2]
             ]);
-//        }
-
-       // firstLoop = false;
-
         nextIndex = (nextIndex < baseTerritoryPathSegments.length - 1) 
                     ? nextIndex + 1 : 0;
         nextX = baseTerritoryPathSegments[nextIndex][1];
         nextY = baseTerritoryPathSegments[nextIndex][2];
     }
 
+    //add start point of of base 
     newPathSegmentsFromBase.push([
         'L',
          baseTerritoryPathSegments[startPoint.outerIndex][1],
          baseTerritoryPathSegments[startPoint.outerIndex][2]
     ]);
 
+    //add all non shared points from combo path
     nextIndex = (startPoint.innerIndex < comboTerritoryPathSegments.length - 1) 
                 ? startPoint.innerIndex + 1 : 0;
     nextX = comboTerritoryPathSegments[nextIndex][1];
@@ -343,7 +318,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         nextY = comboTerritoryPathSegments[nextIndex][2];
     }
 
-    var newPathSegments = newPathSegmentsFromBase.concat(newPathSegmentsFromCombo);
+    newPathSegments = newPathSegmentsFromBase.concat(newPathSegmentsFromCombo);
 
     for(index = 0; index < newPathSegments.length; index += 1) {
         newPathStr += newPathSegments[index][0] 
@@ -359,19 +334,6 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     canvas.path(newPathStr).attr({
         fill: 'blue'
     });
-
-
-    //start on base path:
-    // if not shared add to new path
-    // if shared but not end point continue
-    // if shared end point then 
-    // based on combo path innerIndex of that point, add point and iterate through combo path:
-    //if next point is shared, go backwards
-    //add to new path until we get to other end point, add it and switch to base
-    //path based on outerIndex of shared point, if next point on base is shared go 
-    // other direction and add points until we hit other end point
-
-
 }
 
 //start app
@@ -416,8 +378,8 @@ for (prop in territories) {
 
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 
-//for (index = 0; index < territoryIdsToCombine.length; index += 1) {
-    if(territoryIdsToCombine.length > 0) {
-        combineTerritory(territories, territoryIdsToCombine[0], canvas);
-    }
-//}
+for (index = 0; index < territoryIdsToCombine.length; index += 1) {
+    //if(territoryIdsToCombine.length > 0) {
+        combineTerritory(territories, territoryIdsToCombine[index], canvas);
+    //}
+}
