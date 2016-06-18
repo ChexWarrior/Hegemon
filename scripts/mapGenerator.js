@@ -180,10 +180,10 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         adjTerritory = territories[comboTerritory.adjTerritories[0]],
         adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
-        newPathSegmentsFromBase = [],
-        newPathSegmentsFromCombo = [],
-        newPathSegments = [],
-        newPathStr = '',
+        newTerritoryPathSegmentsFromBase = [],
+        newTerritoryPathSegmentsFromCombo = [],
+        newTerritoryPathSegments = [],
+        newTerritoryPathStr = '',
         outerIndex,
         innerIndex,
         index,
@@ -296,7 +296,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     //add end point as first part of new path string
-    newPathSegmentsFromBase.push([
+    newTerritoryPathSegmentsFromBase.push([
         'M',
          adjTerritoryPathSegments[adjPathEndPoint.outerIndex][1],
          adjTerritoryPathSegments[adjPathEndPoint.outerIndex][2]
@@ -309,7 +309,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     nextY = adjTerritoryPathSegments[nextIndex][2];
 
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
-            newPathSegmentsFromBase.push([
+            newTerritoryPathSegmentsFromBase.push([
                 'L',
                 adjTerritoryPathSegments[nextIndex][1],
                 adjTerritoryPathSegments[nextIndex][2]
@@ -321,7 +321,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     //add start point of of base 
-    newPathSegmentsFromBase.push([
+    newTerritoryPathSegmentsFromBase.push([
         'L',
          adjTerritoryPathSegments[adjPathStartPoint.outerIndex][1],
          adjTerritoryPathSegments[adjPathStartPoint.outerIndex][2]
@@ -333,7 +333,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     nextX = comboTerritoryPathSegments[nextIndex][1];
     nextY = comboTerritoryPathSegments[nextIndex][2];
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
-        newPathSegmentsFromCombo.push([
+        newTerritoryPathSegmentsFromCombo.push([
             'L',
             comboTerritoryPathSegments[nextIndex][1],
             comboTerritoryPathSegments[nextIndex][2]
@@ -345,20 +345,20 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         nextY = comboTerritoryPathSegments[nextIndex][2];
     }
 
-    newPathSegments = newPathSegmentsFromBase.concat(newPathSegmentsFromCombo);
+    newTerritoryPathSegments = newTerritoryPathSegmentsFromBase.concat(newTerritoryPathSegmentsFromCombo);
 
-    for(index = 0; index < newPathSegments.length; index += 1) {
-        newPathStr += newPathSegments[index][0] 
-                        + newPathSegments[index][1] 
+    for(index = 0; index < newTerritoryPathSegments.length; index += 1) {
+        newTerritoryPathStr += newTerritoryPathSegments[index][0] 
+                        + newTerritoryPathSegments[index][1] 
                         + ',' 
-                        + newPathSegments[index][2];
+                        + newTerritoryPathSegments[index][2];
     }
 
     console.log('Base Territory Path Str', adjTerritory.pathStr);
     console.log('Combo Territory Path Str', comboTerritory.pathStr);
-    console.log('New Path Str', newPathStr);
+    console.log('New Path Str', newTerritoryPathStr);
 
-    canvas.path(newPathStr).attr({
+    canvas.path(newTerritoryPathStr).attr({
         fill: 'blue'
     });
 }
