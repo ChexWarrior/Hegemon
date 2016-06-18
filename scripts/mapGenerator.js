@@ -199,7 +199,6 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         lastY,
         nextX,
         nextY,
-        sharedPoint = {},
         sharedPoints = [],
         adjPathStartPoint,
         adjPathEndPoint,
@@ -345,7 +344,8 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         nextY = comboTerritoryPathSegments[nextIndex][2];
     }
 
-    newTerritoryPathSegments = newTerritoryPathSegmentsFromBase.concat(newTerritoryPathSegmentsFromCombo);
+    newTerritoryPathSegments = 
+        newTerritoryPathSegmentsFromBase.concat(newTerritoryPathSegmentsFromCombo);
 
     for(index = 0; index < newTerritoryPathSegments.length; index += 1) {
         newTerritoryPathStr += newTerritoryPathSegments[index][0] 
