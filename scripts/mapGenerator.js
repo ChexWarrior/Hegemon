@@ -184,6 +184,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         newTerritoryPathSegmentsFromCombo = [],
         newTerritoryPathSegments = [],
         newTerritoryPathStr = '',
+        newTerritory = {},
         outerIndex,
         innerIndex,
         index,
@@ -361,6 +362,16 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     canvas.path(newTerritoryPathStr).attr({
         fill: 'blue'
     });
+
+    //remove adj and combo territories
+    //create new entry for this territory
+    //give new territory the voronoi id of combo
+    newTerritory.voronoiId = comboTerritory.voronoiId;
+    //add adj territories of both old territories
+    newTerritory.adjTerritories = 
+        _.uniq(comboTerritory.adjTerritories.concat(adjTerritory.adjTerritories));
+
+    console.log('New Territory: ', newTerritory);
 }
 
 //start app
@@ -406,7 +417,5 @@ for (prop in territories) {
 console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 
 for (index = 0; index < territoryIdsToCombine.length; index += 1) {
-    //if(territoryIdsToCombine.length > 0) {
         combineTerritory(territories, territoryIdsToCombine[index], canvas);
-    //}
 }
