@@ -180,7 +180,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         adjTerritory = territories[comboTerritory.adjTerritories[0]],
         adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
-        newTerritoryPathSegmentsFromBase = [],
+        newTerritoryPathSegmentsFromAdj = [],
         newTerritoryPathSegmentsFromCombo = [],
         newTerritoryPathSegments = [],
         newTerritoryPathStr = '',
@@ -295,7 +295,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     //add end point as first part of new path string
-    newTerritoryPathSegmentsFromBase.push([
+    newTerritoryPathSegmentsFromAdj.push([
         'M',
          adjTerritoryPathSegments[adjPathEndPoint.outerIndex][1],
          adjTerritoryPathSegments[adjPathEndPoint.outerIndex][2]
@@ -308,7 +308,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     nextY = adjTerritoryPathSegments[nextIndex][2];
 
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
-            newTerritoryPathSegmentsFromBase.push([
+            newTerritoryPathSegmentsFromAdj.push([
                 'L',
                 adjTerritoryPathSegments[nextIndex][1],
                 adjTerritoryPathSegments[nextIndex][2]
@@ -320,7 +320,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     //add start point of of base 
-    newTerritoryPathSegmentsFromBase.push([
+    newTerritoryPathSegmentsFromAdj.push([
         'L',
          adjTerritoryPathSegments[adjPathStartPoint.outerIndex][1],
          adjTerritoryPathSegments[adjPathStartPoint.outerIndex][2]
@@ -345,7 +345,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     newTerritoryPathSegments = 
-        newTerritoryPathSegmentsFromBase.concat(newTerritoryPathSegmentsFromCombo);
+        newTerritoryPathSegmentsFromAdj.concat(newTerritoryPathSegmentsFromCombo);
 
     for(index = 0; index < newTerritoryPathSegments.length; index += 1) {
         newTerritoryPathStr += newTerritoryPathSegments[index][0] 
