@@ -177,8 +177,8 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     //the combo territory is the territory that will be put into another
     var comboTerritory = territories[territoryIdToCombine],
         //the adj territory is the territory that the combo territory is being combined into
-        baseTerritory = territories[comboTerritory.adjTerritories[0]],
-        baseTerritoryPathSegments = Raphael.parsePathString(baseTerritory.pathStr),
+        adjTerritory = territories[comboTerritory.adjTerritories[0]],
+        adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         newPathSegmentsFromBase = [],
         newPathSegmentsFromCombo = [],
@@ -201,8 +201,8 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         nextY,
         sharedPoint = {},
         sharedPoints = [],
-        basePathStartPoint,
-        basePathEndPoint,
+        adjPathStartPoint,
+        adjPathEndPoint,
         comboPathStartPoint,
         comboPathEndPoint,
         lastPointIsShared,
@@ -213,13 +213,13 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         fill: 'pink'
     });
 
-    baseTerritory.path.attr({
+    adjTerritory.path.attr({
         fill: 'green'
     });
 
-    for (outerIndex = 0; outerIndex < baseTerritoryPathSegments.length; outerIndex += 1) {
-        outerX = baseTerritoryPathSegments[outerIndex][1];
-        outerY = baseTerritoryPathSegments[outerIndex][2];
+    for (outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
+        outerX = adjTerritoryPathSegments[outerIndex][1];
+        outerY = adjTerritoryPathSegments[outerIndex][2];
         //console.log('Outer Point: ' + outerX + ',' + outerY)
         for (innerIndex = 0; innerIndex < comboTerritoryPathSegments.length; innerIndex += 1) {
             innerX = comboTerritoryPathSegments[innerIndex][1];
@@ -242,28 +242,28 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     }
 
     //find starting and ending shared points relative to base path
-    for (index = 0; index < baseTerritoryPathSegments.length; index += 1) {
-        lastIndex = (index > 0) ? index - 1 : baseTerritoryPathSegments.length - 1;
-        nextIndex = (index < baseTerritoryPathSegments.length - 1) ? index + 1 : 0;
+    for (index = 0; index < adjTerritoryPathSegments.length; index += 1) {
+        lastIndex = (index > 0) ? index - 1 : adjTerritoryPathSegments.length - 1;
+        nextIndex = (index < adjTerritoryPathSegments.length - 1) ? index + 1 : 0;
 
-        currentX = baseTerritoryPathSegments[index][1];
-        currentY = baseTerritoryPathSegments[index][2];
+        currentX = adjTerritoryPathSegments[index][1];
+        currentY = adjTerritoryPathSegments[index][2];
 
-        nextX = baseTerritoryPathSegments[nextIndex][1];
-        nextY = baseTerritoryPathSegments[nextIndex][2];
+        nextX = adjTerritoryPathSegments[nextIndex][1];
+        nextY = adjTerritoryPathSegments[nextIndex][2];
 
-        lastX = baseTerritoryPathSegments[lastIndex][1];
-        lastY = baseTerritoryPathSegments[lastIndex][2];
+        lastX = adjTerritoryPathSegments[lastIndex][1];
+        lastY = adjTerritoryPathSegments[lastIndex][2];
 
         if (currentPoint = isSharedPoint(currentX, currentY, sharedPoints)) {
             lastPointIsShared = isSharedPoint(lastX, lastY, sharedPoints);
             nextPointIsShared = isSharedPoint(nextX, nextY, sharedPoints);
 
             if (!lastPointIsShared && nextPointIsShared) {
-                basePathStartPoint = currentPoint;
+                adjPathStartPoint = currentPoint;
 
             } else if (lastPointIsShared && !nextPointIsShared) {
-                basePathEndPoint = currentPoint;
+                adjPathEndPoint = currentPoint;
             }
         }
     }
@@ -298,33 +298,33 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     //add end point as first part of new path string
     newPathSegmentsFromBase.push([
         'M',
-         baseTerritoryPathSegments[basePathEndPoint.outerIndex][1],
-         baseTerritoryPathSegments[basePathEndPoint.outerIndex][2]
+         adjTerritoryPathSegments[adjPathEndPoint.outerIndex][1],
+         adjTerritoryPathSegments[adjPathEndPoint.outerIndex][2]
     ]);
 
     //beginning with end point, add all non shared paths to new path
-    nextIndex = (basePathEndPoint.outerIndex < baseTerritoryPathSegments.length - 1) 
-                ? basePathEndPoint.outerIndex + 1 : 0;
-    nextX = baseTerritoryPathSegments[nextIndex][1];
-    nextY = baseTerritoryPathSegments[nextIndex][2];
+    nextIndex = (adjPathEndPoint.outerIndex < adjTerritoryPathSegments.length - 1) 
+                ? adjPathEndPoint.outerIndex + 1 : 0;
+    nextX = adjTerritoryPathSegments[nextIndex][1];
+    nextY = adjTerritoryPathSegments[nextIndex][2];
 
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
             newPathSegmentsFromBase.push([
                 'L',
-                baseTerritoryPathSegments[nextIndex][1],
-                baseTerritoryPathSegments[nextIndex][2]
+                adjTerritoryPathSegments[nextIndex][1],
+                adjTerritoryPathSegments[nextIndex][2]
             ]);
-        nextIndex = (nextIndex < baseTerritoryPathSegments.length - 1) 
+        nextIndex = (nextIndex < adjTerritoryPathSegments.length - 1) 
                     ? nextIndex + 1 : 0;
-        nextX = baseTerritoryPathSegments[nextIndex][1];
-        nextY = baseTerritoryPathSegments[nextIndex][2];
+        nextX = adjTerritoryPathSegments[nextIndex][1];
+        nextY = adjTerritoryPathSegments[nextIndex][2];
     }
 
     //add start point of of base 
     newPathSegmentsFromBase.push([
         'L',
-         baseTerritoryPathSegments[basePathStartPoint.outerIndex][1],
-         baseTerritoryPathSegments[basePathStartPoint.outerIndex][2]
+         adjTerritoryPathSegments[adjPathStartPoint.outerIndex][1],
+         adjTerritoryPathSegments[adjPathStartPoint.outerIndex][2]
     ]);
 
     //add all non shared points from combo path
@@ -354,7 +354,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
                         + newPathSegments[index][2];
     }
 
-    console.log('Base Territory Path Str', baseTerritory.pathStr);
+    console.log('Base Territory Path Str', adjTerritory.pathStr);
     console.log('Combo Territory Path Str', comboTerritory.pathStr);
     console.log('New Path Str', newPathStr);
 
