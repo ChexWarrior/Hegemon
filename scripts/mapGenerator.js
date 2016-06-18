@@ -328,8 +328,8 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
     ]);
 
     //add all non shared points from combo path
-    nextIndex = (combpathen.innerIndex < comboTerritoryPathSegments.length - 1) 
-                ? combpathen.innerIndex + 1 : 0;
+    nextIndex = (comboPathEndPoint.innerIndex < comboTerritoryPathSegments.length - 1) 
+                ? comboPathEndPoint.innerIndex + 1 : 0;
     nextX = comboTerritoryPathSegments[nextIndex][1];
     nextY = comboTerritoryPathSegments[nextIndex][2];
     while (!isSharedPoint(nextX, nextY, sharedPoints)) {
