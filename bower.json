@@ -22,6 +22,7 @@
   "dependencies": {
     "Javascript-Voronoi": "git@github.com:gorhill/Javascript-Voronoi.git#^1.0.0",
     "raphael": "^2.1.4",
-    "requirejs": "git@github.com:requirejs/requirejs.git#^2.2.0"
+    "requirejs": "git@github.com:requirejs/requirejs.git#^2.2.0",
+    "underscore": "^1.8.3"
   }
 }
