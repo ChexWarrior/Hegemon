@@ -383,6 +383,10 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         currentTerritory.adjTerritories = _.uniq(currentTerritory.adjTerritories);
     }
 
+    //remove adj territory from new territory
+    adjIndex = _.indexOf(newTerritory.adjTerritories, adjTerritory.voronoiId);
+    newTerritory.adjTerritories.splice(adjIndex, 1);
+
     territories[adjTerritory.voronoiId] = undefined;
     //replace combo territory
     territories[comboTerritory.voronoiId] = newTerritory;
