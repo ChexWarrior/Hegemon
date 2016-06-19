@@ -219,6 +219,9 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
         fill: 'green'
     });
 
+    console.log('Combo Territory', comboTerritory);
+    console.log('Adjacent Territory', adjTerritory);
+
     for (outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
         outerX = adjTerritoryPathSegments[outerIndex][1];
         outerY = adjTerritoryPathSegments[outerIndex][2];
@@ -230,7 +233,7 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
             //console.log('Inner Point: ' + innerX + ',' + innerY)
             //if a shared point
             if (innerX === outerX && innerY === outerY) {
-                console.log('Found shared point!');
+                //console.log('Found shared point!');
                 sharedPoints.push({
                     x: innerX,
                     y: innerY,
@@ -357,12 +360,13 @@ function combineTerritory(territories, territoryIdToCombine, canvas) {
                         + newTerritoryPathSegments[index][2];
     }
 
-    console.log('Base Territory Path Str', adjTerritory.pathStr);
-    console.log('Combo Territory Path Str', comboTerritory.pathStr);
-    console.log('New Path Str', newTerritoryPathStr);
+    // console.log('Base Territory Path Str', adjTerritory.pathStr);
+    // console.log('Combo Territory Path Str', comboTerritory.pathStr);
+    // console.log('New Path Str', newTerritoryPathStr);
 
-    canvas.path(newTerritoryPathStr).attr({
-        fill: 'blue'
+    newTerritory.path = canvas.path(newTerritoryPathStr).attr({
+        fill: 'blue',
+        'fill-opacity': 0.5
     });
 
     //create new entry for this territory
