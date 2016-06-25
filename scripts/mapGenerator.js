@@ -1,21 +1,5 @@
 'use strict';
 
-/**
- * Checklist
- * =========
- * Refactoring in progress, draw shapes next...
- *
- *
- * 1) Generate territories (done)
- * 2) Distinguish territories (done)
- * 3) Get territories adjacent to another territory (done)
- * 4) Ensure territories are of proper size
- *      a) What is "too small"? Use area of polyon...
- *      b) How to fix? Merge into adj territory?
- * 5) Draw units on territories
- * 6) Find center of territories (done, approx)
- */
-
 function initialize(bbox, canvas, numCells) {
     var voronoi = null,
         cells = [],
