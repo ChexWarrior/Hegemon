@@ -16,10 +16,6 @@
  * 6) Find center of territories (done, approx)
  */
 
-function ranNum(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function initialize(bbox, canvas, numCells) {
     var voronoi = null,
         cells = [],
@@ -40,8 +36,8 @@ function initialize(bbox, canvas, numCells) {
 
     for (cellIndex = 0; cellIndex < numCells; cellIndex += 1) {
         sites.push({
-            x: ranNum(0, 800),
-            y: ranNum(0, 800)
+            x: chance.integer({min: 0, max: 800}),
+            y: chance.integer({min: 0, max: 800})
         });
     }
 
