@@ -148,7 +148,7 @@ function isSharedPoint(x, y, sharedPoints) {
 }
 
 
-function combineTerritory(territories, comboTerritory, adjTerritory, canvas) {
+function combineTerritory(territories, comboTerritory, adjTerritory) {
     var adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         currentTerritory,
@@ -319,23 +319,25 @@ function combineTerritory(territories, comboTerritory, adjTerritory, canvas) {
                         + ',' 
                         + newTerritoryPathSegments[index][2];
     }
-
     // console.log('Base Territory Path Str', adjTerritory.pathStr);
     // console.log('Combo Territory Path Str', comboTerritory.pathStr);
     // console.log('New Path Str', newTerritoryPathStr);
+    return newTerritoryPathStr;
+}
 
-    newTerritory.path = canvas.path(newTerritoryPathStr).attr({
-        fill: 'blue',
-        'fill-opacity': 0.5
-    });
+function createCombinedTerritory(territories, adjTerritory, comboTerritory, newTerritoryPath, canvas) {
+    var newTerritory = {},
+        currentTerritory,
+        adjIndex,
+        index;
 
-    //create new entry for this territory
+    newTerritory.path = canvas.path(newTerritoryPath);
     //give new territory the voronoi id of combo
     newTerritory.voronoiId = comboTerritory.voronoiId;
     //add adj territories of both old territories
     newTerritory.adjTerritories = 
         _.uniq(comboTerritory.adjTerritories.concat(adjTerritory.adjTerritories));
-    newTerritory.pathStr = newTerritoryPathStr;
+    newTerritory.pathStr = newTerritoryPath;
     newTerritory.center = getCenter(newTerritory);
     //TODO: Don't get center of territories till after combining smaller ones
     //remove adj territory from territories obj
@@ -346,16 +348,15 @@ function combineTerritory(territories, comboTerritory, adjTerritory, canvas) {
         currentTerritory.adjTerritories[adjIndex] = newTerritory.voronoiId;
         currentTerritory.adjTerritories = _.uniq(currentTerritory.adjTerritories);
     }
-
     //remove adj territory from new territory
     adjIndex = _.indexOf(newTerritory.adjTerritories, adjTerritory.voronoiId);
     newTerritory.adjTerritories.splice(adjIndex, 1);
-
+    //remove adj territory
     territories[adjTerritory.voronoiId] = undefined;
     //replace combo territory
     territories[comboTerritory.voronoiId] = newTerritory;
 
-    console.log('New Territory: ', newTerritory);
+    return newTerritory.voronoiId;
 }
 
 //start app
@@ -372,12 +373,14 @@ var territories = {},
     territory,
     index,
     prop,
+    newTerritoryId,
+    newTerritoryPath,
     territoryIdsToCombine = [],
     comboTerritory,
     adjTerritory,
     MIN_AREA = 4000;
 
-var territories = initialize(bbox, canvas, numCells);
+territories = initialize(bbox, canvas, numCells);
 
 for (prop in territories) {
     if (territories.hasOwnProperty(prop) && prop !== 'length') {
@@ -416,14 +419,22 @@ for (index = 0; index < territoryIdsToCombine.length; index += 1) {
         ];
         //mark combo as pink for testing
         comboTerritory.path.attr({
-            fill: '#F56072'
+            fill: 'pink'
         });
         console.log('Combo Territory', comboTerritory);
         //mark adj as green for testing
         adjTerritory.path.attr({
-            fill: '#3A9430'
+            fill: 'green'
         });
         console.log('Adjacent Territory', adjTerritory);
-        combineTerritory(territories, comboTerritory, adjTerritory, canvas);
+        newTerritoryPath = 
+            combineTerritory(territories, comboTerritory, adjTerritory, canvas);
+        newTerritoryId = 
+            createCombinedTerritory(territories, adjTerritory, comboTerritory, newTerritoryPath, canvas);
+        //mark new territory as blue for testing
+        territories[newTerritoryId].path.attr({
+            fill: 'blue',
+            'fill-opacity': 0.5
+        });
     }
 }
