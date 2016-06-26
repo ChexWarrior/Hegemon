@@ -148,17 +148,8 @@ function isSharedPoint(x, y, sharedPoints) {
 }
 
 
-function combineTerritory(territories, territoryIdToCombine, canvas) {
-
-    //TODO: Refactor
-    //TODO: Remove base and combo territories after combination, replace with new
-    //TODO: Unit tests
-
-    //the combo territory is the territory that will be put into another
-    var comboTerritory = territories[territoryIdToCombine],
-        //the adj territory is the territory that the combo territory is being combined into
-        adjTerritory = territories[comboTerritory.adjTerritories[0]],
-        adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
+function combineTerritory(territories, comboTerritory, adjTerritory, canvas) {
+    var adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         currentTerritory,
         newTerritoryPathSegmentsFromAdj = [],
@@ -393,6 +384,8 @@ var territories = {},
     index,
     prop,
     territoryIdsToCombine = [],
+    comboTerritory,
+    adjTerritory,
     MIN_AREA = 4000;
 
 var territories = initialize(bbox, canvas, numCells);
@@ -423,6 +416,15 @@ console.log('Territory Ids to Combine: ', territoryIdsToCombine);
 for (index = 0; index < territoryIdsToCombine.length; index += 1) {
     //ensure this territory wasn't removed during combo before...
     if(territories[territoryIdsToCombine[index]]) {
-        combineTerritory(territories, territoryIdsToCombine[index], canvas);
+        //get territory to combine
+        comboTerritory = territories[territoryIdsToCombine[index]];
+        //pull random adj territory to combine prev territory with
+        adjTerritory = territories[
+            comboTerritory.adjTerritories[chance.integer({ 
+                min: 0, 
+                max: comboTerritory.adjTerritories.length - 1
+            })]
+        ];
+        combineTerritory(territories, comboTerritory, adjTerritory, canvas);
     }
 }
