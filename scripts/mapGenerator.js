@@ -182,17 +182,6 @@ function combineTerritory(territories, comboTerritory, adjTerritory, canvas) {
         nextPointIsShared,
         currentPoint;
 
-    comboTerritory.path.attr({
-        fill: 'pink'
-    });
-
-    adjTerritory.path.attr({
-        fill: 'green'
-    });
-
-    console.log('Combo Territory', comboTerritory);
-    console.log('Adjacent Territory', adjTerritory);
-
     for (outerIndex = 0; outerIndex < adjTerritoryPathSegments.length; outerIndex += 1) {
         outerX = adjTerritoryPathSegments[outerIndex][1];
         outerY = adjTerritoryPathSegments[outerIndex][2];
@@ -425,6 +414,16 @@ for (index = 0; index < territoryIdsToCombine.length; index += 1) {
                 max: comboTerritory.adjTerritories.length - 1
             })]
         ];
+        //mark combo as pink for testing
+        comboTerritory.path.attr({
+            fill: '#F56072'
+        });
+        console.log('Combo Territory', comboTerritory);
+        //mark adj as green for testing
+        adjTerritory.path.attr({
+            fill: '#3A9430'
+        });
+        console.log('Adjacent Territory', adjTerritory);
         combineTerritory(territories, comboTerritory, adjTerritory, canvas);
     }
 }
