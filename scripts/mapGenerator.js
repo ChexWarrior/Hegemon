@@ -67,8 +67,8 @@ function drawTerritory(territory, canvas) {
     return pathObj;
 }
 
-function drawTerritoryCenter(territory, canvas) {
-    canvas.circle(territory.centerPoint.x, territory.centerPoint.y, 3).attr({
+function drawTerritoryId(territory, canvas) {
+    canvas.text(territory.centerPoint.x, territory.centerPoint.y, territory.voronoiId).attr({
         fill: '#2862C1',
         stroke: '#000'
     });
@@ -399,7 +399,7 @@ for (prop in territories) {
         //console.log('Center Point: ', territory.centerPoint);
         territory.path = drawTerritory(territory, canvas);
         //console.log('Path: ', territory.path);
-        drawTerritoryCenter(territory, canvas);
+        drawTerritoryId(territory, canvas);
     }
 }
 
