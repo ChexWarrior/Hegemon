@@ -148,7 +148,7 @@ function isSharedPoint(x, y, sharedPoints) {
 }
 
 
-function combineTerritory(territories, comboTerritory, adjTerritory) {
+function combineTerritory(comboTerritory, adjTerritory) {
     var adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         currentTerritory,
@@ -428,7 +428,7 @@ for (index = 0; index < territoryIdsToCombine.length; index += 1) {
         });
         console.log('Adjacent Territory', adjTerritory);
         newTerritoryPath = 
-            combineTerritory(territories, comboTerritory, adjTerritory, canvas);
+            combineTerritory(comboTerritory, adjTerritory);
         newTerritoryId = 
             createCombinedTerritory(territories, adjTerritory, comboTerritory, newTerritoryPath, canvas);
         //mark new territory as blue for testing
