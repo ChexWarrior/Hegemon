@@ -149,6 +149,11 @@ function isSharedPoint(x, y, sharedPoints) {
 
 
 function combineTerritory(comboTerritory, adjTerritory) {
+
+    //TODO: Handle case when all points in adj path are shared with combo path...
+    // Determine start and end points of path that isn't all shared and connect
+    // it's start and end points
+
     var adjTerritoryPathSegments = Raphael.parsePathString(adjTerritory.pathStr),
         comboTerritoryPathSegments = Raphael.parsePathString(comboTerritory.pathStr),
         currentTerritory,
@@ -205,6 +210,8 @@ function combineTerritory(comboTerritory, adjTerritory) {
             }
         }
     }
+
+    console.log('Shared Points', sharedPoints);
 
     //find starting and ending shared points relative to base path
     for (index = 0; index < adjTerritoryPathSegments.length; index += 1) {
